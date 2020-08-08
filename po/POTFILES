@@ -1,0 +1,7 @@
+data/ru.slie.beat.desktop.in
+data/ru.slie.beat.appdata.xml.in
+data/ru.slie.beat.gschema.xml
+src/window.ui
+src/main.py
+src/window.py
+

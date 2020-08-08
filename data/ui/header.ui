@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.22.2 -->
+<interface>
+  <requires lib="gtk+" version="3.20"/>
+  <template class="HeaderBar" parent="GtkHeaderBar">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="vexpand">True</property>
+    <property name="title" translatable="yes">beat</property>
+    <property name="show_close_button">True</property>
+    <child>
+      <object class="GtkButton" id="_button_open_files">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <signal name="clicked" handler="_on_open_files" swapped="no"/>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-open</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkButton" id="_button_add_files">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <signal name="clicked" handler="_on_add_files" swapped="no"/>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-add</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="_button_stop">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <signal name="clicked" handler="_on_stop" swapped="no"/>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-media-stop</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="_button_play">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <signal name="clicked" handler="_on_play" swapped="no"/>
+        <child>
+          <object class="GtkImage" id="_button_play_img">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-media-play</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">3</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="_button_prev">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <signal name="clicked" handler="_on_prev" swapped="no"/>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-media-previous</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">4</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="_button_next">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <signal name="clicked" handler="_on_next" swapped="no"/>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-media-next</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">5</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkVolumeButton" id="_button_volume">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="focus_on_click">False</property>
+        <property name="receives_default">True</property>
+        <property name="relief">none</property>
+        <property name="orientation">vertical</property>
+        <property name="value">100</property>
+        <property name="icons">audio-volume-muted-symbolic
+audio-volume-high-symbolic
+audio-volume-low-symbolic
+audio-volume-medium-symbolic</property>
+        <signal name="value-changed" handler="_on_volume_changed" swapped="no"/>
+        <child internal-child="plus_button">
+          <object class="GtkButton">
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="relief">none</property>
+          </object>
+        </child>
+        <child internal-child="minus_button">
+          <object class="GtkButton">
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="relief">none</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack_type">end</property>
+        <property name="position">6</property>
+      </packing>
+    </child>
+  </template>
+</interface>

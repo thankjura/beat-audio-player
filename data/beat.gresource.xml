@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/ru/slie/beat">
+    <file>ui/window.ui</file>
+    <file>ui/header.ui</file>
+    <file>ui/progress.ui</file>
+  </gresource>
+</gresources>
