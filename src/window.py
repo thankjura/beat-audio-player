@@ -48,21 +48,6 @@ class BeatWindow(Gtk.ApplicationWindow):
         # self.__playlist.show_all()
         self.__notebook.append_page(scrollbox, Gtk.Label(label=self.__playlist.label))
 
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/03. Steal This Album!/02 - Innervision.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/03. Steal This Album!/15 - Roulette.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/02. Toxicity/05 - X.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/02. Toxicity/06 - Chop Suey!.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/02. Toxicity/07 - Bounce.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/02. Toxicity/09 - Atwa.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/02. Toxicity/12 - Toxicity.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/04. Mezmerize/02 - B.Y.O.B..flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/04. Mezmerize/04 - Cigaro.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/04. Mezmerize/05 - Radio,Video.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/04. Mezmerize/06 - This Cocaine Makes Me Feel Like I'm On This Song.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/04. Mezmerize/07 - Violent Pornography.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/04. Mezmerize/09 - Sad Statue.flac")
-        self.__playlist.add_track("/home/GrandMaster/Music/System Of A Down/04. Mezmerize/10 - Old School Hollywood.flac")
-
     @GObject.Property(type=PlayList, default=None,
                       flags=GObject.ParamFlags.READABLE)
     def playlist(self):

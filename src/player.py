@@ -161,11 +161,5 @@ class Player(GObject.GObject):
     def stop(self):
         self.props.state = Playback.STOPPED
 
-    # def get_position(self) -> float:
-    #     status_position, position = self.__player.query_position(Gst.Format.TIME)
-    #     status_duration, duration = self.__player.query_duration(Gst.Format.TIME)
-    #     if status_duration and status_position:
-    #         return (float(position) / duration) * 100
-
     def set_volume(self, volume: float):
         self.__volume.set_property('volume', volume)
