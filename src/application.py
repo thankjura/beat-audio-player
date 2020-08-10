@@ -50,5 +50,7 @@ class Application(Gtk.Application):
         if not self.__window:
             self.__window = BeatWindow(self)
             Settings(self)
+            if not self.__window.props.playlist:
+                self.__window.create_playlist_tab("playlist")
         self.__window.present()
 
