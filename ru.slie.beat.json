@@ -29,7 +29,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "file:///home/GrandMaster/Development/gnome/beat"
+                    "url" : "https://github.com/thankjura/beat-audio-player"
                 }
             ]
         }

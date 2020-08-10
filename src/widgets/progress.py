@@ -3,6 +3,9 @@ from ..utils.track_info import TrackInfo
 from ..player import Playback
 
 
+__all__ = ["ProgressBar"]
+
+
 @Gtk.Template(resource_path="/ru/slie/beat/ui/progress.ui")
 class ProgressBar(Gtk.Box):
     __gtype_name__ = "ProgressBar"
@@ -20,6 +23,8 @@ class ProgressBar(Gtk.Box):
         self.__player.connect("clock-tick", self.__on_player_clock_tick)
         self.__player.connect("notify::state", self.__on_player_state)
         self.__progress_handler_id = self.__progress_bar.connect("change-value", self.__on_seek)
+        # TODO: block handler
+        # self.__progress_bar.connect("button-press-event", self.__on_start_seeking)
         self.__progress_bar.connect("button-release-event", self.__on_finish_seeking)
         self.__progress_seeking_position = None
 
@@ -56,6 +61,4 @@ class ProgressBar(Gtk.Box):
             self.__current_position_label.set_text(TrackInfo.get_time_str(current))
         else:
             self.__current_position_label.set_text(TrackInfo.get_time_str(0))
-
-
 

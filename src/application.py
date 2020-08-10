@@ -19,8 +19,13 @@ import sys
 import gi
 
 from gi.repository import Gtk, Gio, GObject
+
 from .window import BeatWindow
 from .player import Player
+from .settings import Settings
+
+
+__all__ = ["Application"]
 
 
 class Application(Gtk.Application):
@@ -42,8 +47,8 @@ class Application(Gtk.Application):
         return self.__window
 
     def do_activate(self):
-        # win = self.props.active_window
         if not self.__window:
             self.__window = BeatWindow(self)
+            Settings(self)
         self.__window.present()
 

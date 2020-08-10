@@ -3,7 +3,9 @@ from urllib.parse import unquote
 from gi.repository import Gtk, Gdk, GObject
 from ..utils.track_info import TrackInfo
 
-COLS = {
+__all__ = ["PlayList"]
+
+PLAYLIST_COLS = {
         "_src":     str,
         "_current": bool,
         "Artist":   str,
@@ -26,21 +28,27 @@ ROW_ATOM = Gdk.Atom.intern_static_string("GTK_LIST_BOX_ROW")
 class PlayListStore(Gtk.ListStore):
     __gtype_name__ = "PlayListStore"
     def __init__(self):
-        super().__init__(*[t for col, t in COLS.items()])
+        super().__init__(*[t for col, t in PLAYLIST_COLS.items()])
 
 
 
 class PlayList(Gtk.TreeView):
     __gtype_name__ = "PlayList"
 
-    label = GObject.Property(type=str, default='bar')
 
-    def __init__(self, app):
+    __gsignals__ = {
+        "changed": (GObject.SignalFlags.RUN_FIRST, None, ())
+    }
+
+
+    def __init__(self, app, label):
         super().__init__()
         self.__app = app
+        self.__label = label
         self.__selection = self.get_selection()
         self.__store = PlayListStore()
-        self.__player =self.__app.props.player
+        self.__player = self.__app.props.player
+        self.__cols = PLAYLIST_COLS
         self.set_model(self.__store)
 
         self.connect("button-press-event", self.__on_button_press)
@@ -49,18 +57,25 @@ class PlayList(Gtk.TreeView):
         self.enable_model_drag_dest(TARGETS, Gdk.DragAction.DEFAULT)
         self.drag_dest_add_text_targets()
         self.drag_source_add_text_targets()
-        self.connect("drag_data_get", self.__on_data_get)
-        self.connect("drag_data_received", self.__on_data_drop)
-        self.connect("drag_data_delete", self.__on_data_delete)
-        for col_index, col in enumerate(COLS.keys()):
+
+        for col_index, col in enumerate(PLAYLIST_COLS.keys()):
             if col.startswith("_"):
                 continue
-            if COLS[col] == str:
+            if PLAYLIST_COLS[col] == str:
                 renderer = Gtk.CellRendererText()
                 column = Gtk.TreeViewColumn(col, renderer, text=col_index)
                 self.append_column(column)
-        self.show_all()
 
+        self.connect("drag_data_get", self.__on_data_get)
+        self.connect("drag_data_received", self.__on_data_drop)
+        self.connect("drag_data_delete", self.__on_data_delete)
+        self.__row_changed_handler_id = self.__store.connect("row-changed", self.__save_playlist)
+        self.__row_deleted_handler_id = self.__store.connect("row-deleted", self.__save_playlist)
+        self.__row_inserted_handler_id = self.__store.connect("row-inserted", self.__save_playlist)
+        self.__rows_reordered_handler_id = self.__store.connect("rows-reordered", self.__save_playlist)
+
+    def __save_playlist(self, *args):
+        self.emit("changed")
 
     def __on_button_press(self, view, event):
         if event.type != Gdk.EventType.DOUBLE_BUTTON_PRESS:
@@ -150,7 +165,7 @@ class PlayList(Gtk.TreeView):
                 self.__selection.select_iter(next_iter)
                 return model[next_iter][0]
 
-    def add_tracks(self, path, position_iter, insert_after):
+    def add_tracks(self, path, position_iter, insert_after, silent=False):
         path = Path(path)
         if not path.exists():
             return False
@@ -158,11 +173,9 @@ class PlayList(Gtk.TreeView):
         if path.is_file():
             return self.add_track(str(path), position_iter, insert_after)
 
-    def add_track(self, url: str, position_iter=None, insert_after=True) -> bool:
-        info = TrackInfo(url)
-        if not info.is_valid():
-            return False
-        row = [url, False, info.get_tag("artist"), info.get_tag("album"), info.get_tag("title"), info.get_len_str()]
+    def add_row(self, row, position_iter=None, insert_after=True, silent=False):
+        if silent:
+            self.__store.handler_block(self.__row_inserted_handler_id)
 
         if position_iter:
             if insert_after:
@@ -172,4 +185,39 @@ class PlayList(Gtk.TreeView):
         else:
             self.__store.append(row)
 
+        if silent:
+            self.__store.handler_unblock(self.__row_inserted_handler_id)
+
+
+    def add_track(self, url: str, position_iter=None, insert_after=True, silent=False) -> bool:
+        info = TrackInfo(url)
+        if not info.is_valid():
+            return False
+        row = [url, False, info.get_tag("artist"), info.get_tag("album"), info.get_tag("title"), info.get_len_str()]
+        self.add_row(row, position_iter, insert_after)
+
+
         return True
+
+    def get_cols(self):
+        return self.__cols
+
+    def get_rows(self):
+        return [t[:] for t in self.__store]
+
+    @GObject.Property(type=str, default="playlist",
+                      flags=GObject.ParamFlags.READABLE)
+    def label(self):
+        return self.__label
+
+    @GObject.Property(type=int, default=None,
+                      flags=GObject.ParamFlags.READABLE)
+    def index(self):
+        viewport = self.get_parent()
+        if not viewport:
+            return None
+        scrollbox = viewport.get_parent()
+        notebook = scrollbox.get_parent()
+        if not notebook:
+            return None
+        return notebook.page_num(scrollbox)

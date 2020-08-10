@@ -1,5 +1,6 @@
 from mutagen import File
 
+__all__ = ["TrackInfo"]
 
 class TrackInfo:
     def __init__(self, url):

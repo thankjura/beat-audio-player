@@ -2,6 +2,9 @@ from gi.repository import Gtk
 from ..player import Playback
 
 
+__all__ = ["HeaderBar"]
+
+
 @Gtk.Template(resource_path="/ru/slie/beat/ui/header.ui")
 class HeaderBar(Gtk.HeaderBar):
     __gtype_name__ = "HeaderBar"
@@ -17,7 +20,7 @@ class HeaderBar(Gtk.HeaderBar):
 
     def __open_files(self, keep_tab: bool):
         dialog = Gtk.FileChooserDialog(
-            title="Please choose a file", parent=self.__app.prop.win, action=Gtk.FileChooserAction.OPEN
+            title="Please choose a file", parent=self.__app.props.win, action=Gtk.FileChooserAction.OPEN
         )
         dialog.set_select_multiple(True)
         dialog.add_buttons(
@@ -27,10 +30,17 @@ class HeaderBar(Gtk.HeaderBar):
             Gtk.ResponseType.OK,
         )
 
+        if keep_tab:
+            playlist = self.__app.props.win.props.playlist
+            if playlist is None:
+                playlist = self.__app.props.win.create_playlist_tab("playlist", current=True)
+        else:
+            playlist = self.__app.props.win.create_playlist_tab("playlist", current=True)
+
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
             for uri in dialog.get_filenames():
-                self.__app.props.win.playlist.add(uri, None, True)
+                playlist.add_tracks(uri, None, True)
 
         dialog.destroy()
 
@@ -60,7 +70,7 @@ class HeaderBar(Gtk.HeaderBar):
     def _on_prev(self, button):
         if self.__player.props.state != Playback.PLAYING:
             return
-        track = self.__app.props.win.playlist.get_prev()
+        track = self.__app.props.win.props.playlist.get_prev()
         if track:
             self.__player.play(track)
 
@@ -68,7 +78,7 @@ class HeaderBar(Gtk.HeaderBar):
     def _on_next(self, button):
         if self.__player.props.state != Playback.PLAYING:
             return
-        track = self.__app.props.win.playlist.get_next()
+        track = self.__app.props.win.props.playlist.get_next()
         if track:
             self.__player.play(track)
 

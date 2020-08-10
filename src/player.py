@@ -3,6 +3,9 @@ from pathlib import Path
 from gi.repository import Gst, GLib, Gtk, GObject
 
 
+__all__ = ["Player", "Playback"]
+
+
 class Playback(IntEnum):
     STOPPED = 0
     READY = 1
