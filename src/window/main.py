@@ -1,4 +1,4 @@
-# window.py
+# main.py
 #
 # Copyright 2020 thankjura
 #
@@ -18,70 +18,13 @@
 from gi.repository import Gtk, GObject, Gdk
 from gettext import gettext as _
 
-from .widgets.header import HeaderBar
-from .widgets.progress import ProgressBar
-from .widgets.playlist import PlayList, PLAYLIST_COLS
+from .tab import Tab
+from ..widgets.header import HeaderBar
+from ..widgets.progress import ProgressBar
+from ..widgets.playlist import PlayList, PLAYLIST_COLS
 
 
 __all__ = ["BeatWindow"]
-
-
-class Tab(Gtk.Box):
-    __gtype_name__ = 'Tab'
-
-
-    __gsignals__ = {
-        "deleted": (GObject.SignalFlags.RUN_FIRST, None, (PlayList,)),
-        "renamed": (GObject.SignalFlags.RUN_FIRST, None, (str,))
-    }
-
-
-    def __init__(self, label, **kwargs):
-        super().__init__(Gtk.Orientation.HORIZONTAL, spacing=10)
-        self.__label = Gtk.Label(label)
-        self.__event_box = Gtk.EventBox()
-        self.__menu = Gtk.Menu()
-        self.__menu_rename_item = Gtk.MenuItem(_("Rename"))
-        self.__menu_delete_item = Gtk.MenuItem(_("Delete"))
-        self.__menu.add(self.__menu_rename_item)
-        self.__menu.add(self.__menu_delete_item)
-        self.__menu.show_all()
-        self.__event_box.add(self.__label)
-        self.__entry = Gtk.Entry()
-
-        self.pack_start(self.__event_box, True, True, 0)
-
-        self.__event_box.connect("button-press-event", self.__on_button_press)
-        self.__menu_rename_item.connect("activate", self.__on_rename)
-        self.__menu_delete_item.connect("activate", self.__on_delete)
-        self.__entry.connect("changed", self.__on_entry_changed)
-        self.__entry.connect("editing-done", self.__on_entry_editing_done)
-
-        self.show_all()
-        self.pack_start(self.__entry, True, True, 0)
-
-    def __on_button_press(self, _widget, event):
-        if event.type != Gdk.EventType.BUTTON_PRESS:
-            return
-        if event.get_button().button != 3:
-            return
-        self.__menu.popup(None, None, None, None, 0, Gtk.get_current_event_time())
-
-    def __on_delete(self, _widget):
-        self.emit("renamed", self.__label.get_text())
-
-    def __on_rename(self, _widget):
-        self.__label.hide()
-        self.__entry.show()
-        self.__entry.set_text(self.__label.get_text())
-
-    def __on_entry_changed(self, *args):
-        self.__label.set_text(self.__entry.get_text())
-        self.__lable.show()
-        self.__entry.hide()
-
-    def __on_entry_editing_done(self, *args):
-        print(*args)
 
 
 @Gtk.Template(resource_path='/ru/slie/beat/ui/window.ui')
@@ -95,6 +38,7 @@ class BeatWindow(Gtk.ApplicationWindow):
         "playlist-changed": (GObject.SignalFlags.RUN_FIRST, None, (PlayList,)),
         "playlist-removed": (GObject.SignalFlags.RUN_FIRST, None, ()),
         "tab-selected": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
+        "tab-renamed": (GObject.SignalFlags.RUN_FIRST, None, (int,str)),
     }
 
     def __init__(self, app, **kwargs):
@@ -130,7 +74,9 @@ class BeatWindow(Gtk.ApplicationWindow):
             for row in rows:
                 playlist.add_row([row.get(c) for c in PLAYLIST_COLS], silent=silent)
 
-        tab = Tab(label)
+        tab = Tab(label, scrollbox)
+        tab.connect("deleted", self.__on_delete_tab)
+        tab.connect("renamed", self.__on_rename_tab)
         scrollbox.show_all()
 
         page = self.__notebook.append_page(scrollbox, tab)
@@ -139,13 +85,14 @@ class BeatWindow(Gtk.ApplicationWindow):
             self.select_tab(page)
         return playlist
 
-    def __delete_tab(self, index):
-        self.__notebook.remove_page(index)
-        self.__toggle_show_tabs()
+    def __on_rename_tab(self, tab, label):
+        page = self.__notebook.child_get_property(tab.tab_content, "position")
+        self.emit("tab-renamed", page, label)
 
-    def __on_tab_close_button_event(self, img, event):
-        print(img)
-        print(event)
+    def __on_delete_tab(self, tab):
+        print(tab)
+        # self.__notebook.remove_page(index)
+        # self.__toggle_show_tabs()
 
     def select_tab(self, index, silent=False):
         if index is None:

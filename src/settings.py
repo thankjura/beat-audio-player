@@ -8,6 +8,8 @@ from gi.repository import GObject, GLib
 __all__= ["Settings"]
 
 
+PLAYLIST_NAME_TEMPLATE = "Playlist {}"
+
 
 class Settings:
     def __init__(self, app):
@@ -19,6 +21,7 @@ class Settings:
         self.__load()
         self.__app.props.win.connect("playlist-changed", self.__on_playlist_changed)
         self.__app.props.win.connect("tab-selected", self.__on_playlist_switch)
+        self.__app.props.win.connect("tab-renamed", self.__on_playlist_renamed)
 
     def __init_dirs(self):
         if not self.__config_dir.exists():
@@ -77,7 +80,7 @@ class Settings:
             return
 
         filename = f"playlist_{index:03d}.csv"
-        self.__config[f"Playlist {index}"] = {
+        self.__config[PLAYLIST_NAME_TEMPLATE.format(index)] = {
             "label": playlist.props.label,
             "file": filename
         }
@@ -91,8 +94,15 @@ class Settings:
             for row in playlist.get_rows():
                 writer.writerow(row)
 
-    def __on_playlist_switch(self, win, index):
+    def __on_playlist_switch(self, _win, index):
         self.__config["main"]["playlist"] = str(index)
+        self.__save()
+
+    def __on_playlist_renamed(self, _win, index, label):
+        playlist_name = PLAYLIST_NAME_TEMPLATE.format(index)
+        if not playlist_name in self.__config:
+            self.__config[playlist_name] = {}
+        self.__config[playlist_name]['label'] = label
         self.__save()
 
     def get_playlist_index(self):
