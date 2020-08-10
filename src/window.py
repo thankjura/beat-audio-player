@@ -26,17 +26,6 @@ from .widgets.playlist import PlayList, PLAYLIST_COLS
 __all__ = ["BeatWindow"]
 
 
-class TabMenu(Gtk.Menu):
-    __gtype_name__ = 'TabMenu'
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        self.append(self.__rename_item)
-        self.append(self.__delete_item)
-        self.show_all()
-
-
 class Tab(Gtk.Box):
     __gtype_name__ = 'Tab'
 
@@ -45,10 +34,11 @@ class Tab(Gtk.Box):
         self.__label = Gtk.Label(label=label)
         self.__event_box = Gtk.EventBox()
         self.__menu = Gtk.Menu()
-        print(_("Rename"))
         self.__menu_rename_item = Gtk.MenuItem(_("Rename"))
         self.__menu_delete_item = Gtk.MenuItem(_("Delete"))
-
+        self.__menu.add(self.__menu_rename_item)
+        self.__menu.add(self.__menu_delete_item)
+        self.__menu.show_all()
         self.__event_box.add(self.__label)
 
         self.pack_start(self.__event_box, True, True, 0)

@@ -30,6 +30,7 @@ localedir = '@localedir@'
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 gettext.install('beat', localedir)
+gettext.textdomain('beat')
 
 gi.require_version("Gtk", "3.0")
 gi.require_version('Gst', '1.0')
