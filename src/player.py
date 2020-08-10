@@ -106,8 +106,7 @@ class Player(GObject.GObject):
     def __on_bus_eos(self, bus, message):
         self.emit('eos')
 
-    @GObject.Property(type=int, flags=GObject.ParamFlags.READWRITE |
-                                      GObject.ParamFlags.EXPLICIT_NOTIFY)
+    @GObject.Property(type=int, flags=GObject.ParamFlags.READWRITE)
     def state(self):
         return self.__state
 
@@ -122,7 +121,6 @@ class Player(GObject.GObject):
         if state == Playback.PLAYING:
             self.__player.set_state(Gst.State.PLAYING)
         self.__state = state
-        self.notify("state")
 
     @GObject.Property
     def position(self):
