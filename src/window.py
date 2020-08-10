@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, GObject, Gdk
+from gettext import gettext as _
 
 from .widgets.header import HeaderBar
 from .widgets.progress import ProgressBar
@@ -23,6 +24,47 @@ from .widgets.playlist import PlayList, PLAYLIST_COLS
 
 
 __all__ = ["BeatWindow"]
+
+
+class TabMenu(Gtk.Menu):
+    __gtype_name__ = 'TabMenu'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.append(self.__rename_item)
+        self.append(self.__delete_item)
+        self.show_all()
+
+
+class Tab(Gtk.Box):
+    __gtype_name__ = 'Tab'
+
+    def __init__(self, label, **kwargs):
+        super().__init__(Gtk.Orientation.HORIZONTAL, spacing=10)
+        self.__label = Gtk.Label(label=label)
+        self.__event_box = Gtk.EventBox()
+        self.__menu = Gtk.Menu()
+        print(_("Rename"))
+        self.__menu_rename_item = Gtk.MenuItem(_("Rename"))
+        self.__menu_delete_item = Gtk.MenuItem(_("Delete"))
+
+        self.__event_box.add(self.__label)
+
+        self.pack_start(self.__event_box, True, True, 0)
+        self.__event_box.connect("button-press-event", self.__on_button_press)
+        self.show_all()
+
+    def __on_button_press(self, _widget, event):
+        if event.type != Gdk.EventType.BUTTON_PRESS:
+            return
+        if event.get_button().button != 3:
+            return
+        self.__menu.popup(None, None, None, None, 0, Gtk.get_current_event_time())
+
+    @property
+    def label(self):
+        return self.__label
 
 
 @Gtk.Template(resource_path='/ru/slie/beat/ui/window.ui')
@@ -71,13 +113,10 @@ class BeatWindow(Gtk.ApplicationWindow):
             for row in rows:
                 playlist.add_row([row.get(c) for c in PLAYLIST_COLS], silent=silent)
 
-        label_box = Gtk.Box(Gtk.Orientation.HORIZONTAL, spacing=2)
-        colse_button = Gtk.Button.new_from_icon_name("window-close-symbolic", Gtk.IconSize.BUTTON)
-        label_box.pack_start(Gtk.Label(label=label), False, False, 0)
-        label_box.pack_start(colse_button, False, False, 0)
-        label_box.show_all()
+        tab = Tab(label)
         scrollbox.show_all()
-        page = self.__notebook.append_page(scrollbox, label_box)
+
+        page = self.__notebook.append_page(scrollbox, tab)
         self.__toggle_show_tabs()
         if current:
             self.select_tab(page)
@@ -86,6 +125,10 @@ class BeatWindow(Gtk.ApplicationWindow):
     def __delete_tab(self, index):
         self.__notebook.remove_page(index)
         self.__toggle_show_tabs()
+
+    def __on_tab_close_button_event(self, img, event):
+        print(img)
+        print(event)
 
     def select_tab(self, index, silent=False):
         if index is None:

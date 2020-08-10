@@ -19,6 +19,7 @@ import sys
 import gi
 
 from gi.repository import Gtk, Gio, GObject
+from gettext import gettext as _
 
 from .window import BeatWindow
 from .player import Player
@@ -51,6 +52,6 @@ class Application(Gtk.Application):
             self.__window = BeatWindow(self)
             Settings(self)
             if not self.__window.props.playlist:
-                self.__window.create_playlist_tab("playlist")
+                self.__window.create_playlist_tab(_("new playlist"))
         self.__window.present()
 
