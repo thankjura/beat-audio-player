@@ -8,13 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-10 17:30+0300\n"
+"POT-Creation-Date: 2020-08-12 02:41+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/ru.slie.beat.desktop.in:3 data/ui/header.ui:9
@@ -29,10 +29,26 @@ msgstr ""
 msgid "new playlist"
 msgstr ""
 
-#: src/window.py:48 src/window.py:49
+#: src/window/tab.py:23
 msgid "Rename"
 msgstr ""
 
-#: src/window.py:50
+#: src/window/tab.py:24 src/widgets/playlist.py:71
 msgid "Delete"
+msgstr ""
+
+#: src/widgets/playlist.py:23
+msgid "Artist"
+msgstr ""
+
+#: src/widgets/playlist.py:24
+msgid "Album"
+msgstr ""
+
+#: src/widgets/playlist.py:25
+msgid "Title"
+msgstr ""
+
+#: src/widgets/playlist.py:26
+msgid "Length"
 msgstr ""

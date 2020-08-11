@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beat-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-10 17:19+0300\n"
-"PO-Revision-Date: 2020-08-10 18:16+0300\n"
+"POT-Creation-Date: 2020-08-12 02:42+0300\n"
+"PO-Revision-Date: 2020-08-12 02:42+0300\n"
 "Last-Translator: thankjura <me@slie.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -35,10 +35,26 @@ msgstr ""
 msgid "new playlist"
 msgstr "новый плейлист"
 
-#: src/window.py:49
-msgid "Rename"
-msgstr "Переименовать"
+#: src/widgets/playlist.py:23
+msgid "Artist"
+msgstr "Исполнитель"
 
-#: src/window.py:50
+#: src/widgets/playlist.py:24
+msgid "Album"
+msgstr "Альбом"
+
+#: src/widgets/playlist.py:25
+msgid "Title"
+msgstr "Название"
+
+#: src/widgets/playlist.py:26
+msgid "Length"
+msgstr "Продолжительность"
+
+#: src/widgets/playlist.py:71 src/window/tab.py:24
 msgid "Delete"
 msgstr "Удалить"
+
+#: src/window/tab.py:23
+msgid "Rename"
+msgstr "Переименовать"
