@@ -116,14 +116,13 @@ class Settings:
             self.__config.set_value(uuid, "file", filename)
         self.__config.set_value(uuid, "label", playlist.props.label)
         self.__config.set_value(uuid, "position", playlist.props.index)
-        #self.__config.set_value(uuid, "selected", playlist.is_visible())
         self.__save()
 
         cols = playlist.get_cols()
 
         with Path(self.__config_dir, filename).open('w') as f:
             writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
-            writer.writerow(cols.keys())
+            writer.writerow(cols)
             for row in playlist.get_rows():
                 writer.writerow(row)
 

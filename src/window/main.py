@@ -21,7 +21,7 @@ from gettext import gettext as _
 from .tab import Tab
 from ..widgets.header import HeaderBar
 from ..widgets.progress import ProgressBar
-from ..widgets.playlist import PlayList, PLAYLIST_COLS
+from ..widgets.playlist import PlayList
 
 
 __all__ = ["BeatWindow"]
@@ -73,8 +73,9 @@ class BeatWindow(Gtk.ApplicationWindow):
         scrollbox = Gtk.ScrolledWindow()
         scrollbox.add_with_viewport(playlist)
         if rows:
+            cols = playlist.get_cols()
             for row in rows:
-                playlist.add_row([row.get(c) for c in PLAYLIST_COLS])
+                playlist.add_row([row.get(c) for c in cols])
 
         tab = Tab(label)
         tab.connect("deleted", self.__on_delete_tab, playlist)

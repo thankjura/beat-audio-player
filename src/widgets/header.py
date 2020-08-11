@@ -65,15 +65,20 @@ class HeaderBar(Gtk.HeaderBar):
         if self.__player.props.state == Playback.PLAYING:
             self.__player.pause()
         else:
-            track = self.__app.props.win.props.playlist.get_selected()
-            if track:
-                self.__player.play(track)
+            playlist = self.__app.props.win.props.playlist
+            tracks = playlist.get_selected()
+            if tracks:
+                self.__player.play(tracks[0])
+            else:
+                track = playlist.get_first_and_activate()
+                if track:
+                    self.__player.play(track)
 
     @Gtk.Template.Callback()
     def _on_prev(self, button):
         if self.__player.props.state != Playback.PLAYING:
             return
-        track = self.__app.props.win.props.playlist.get_prev()
+        track = self.__app.props.win.props.playlist.get_prev_and_activate()
         if track:
             self.__player.play(track)
 
@@ -81,7 +86,7 @@ class HeaderBar(Gtk.HeaderBar):
     def _on_next(self, button):
         if self.__player.props.state != Playback.PLAYING:
             return
-        track = self.__app.props.win.props.playlist.get_next()
+        track = self.__app.props.win.props.playlist.get_next_and_activate()
         if track:
             self.__player.play(track)
 

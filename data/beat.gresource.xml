@@ -4,7 +4,6 @@
     <file>ui/window.ui</file>
     <file>ui/header.ui</file>
     <file>ui/progress.ui</file>
-    <file>icons/close.png</file>
-    <file>icons/close-hover.png</file>
+    <file>icons/active_track.png</file>
   </gresource>
 </gresources>
