@@ -37,8 +37,9 @@ class BeatWindow(Gtk.ApplicationWindow):
     __gsignals__ = {
         "playlist-changed": (GObject.SignalFlags.RUN_FIRST, None, (PlayList,)),
         "playlist-removed": (GObject.SignalFlags.RUN_FIRST, None, ()),
-        "tab-selected": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
-        "tab-renamed": (GObject.SignalFlags.RUN_FIRST, None, (int,str)),
+        "tab-selected": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        "tab-renamed": (GObject.SignalFlags.RUN_FIRST, None, (str,str)),
+        "tab-removed": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
     }
 
     def __init__(self, app, **kwargs):
@@ -53,8 +54,9 @@ class BeatWindow(Gtk.ApplicationWindow):
         self.__body.reorder_child(self.__progress, 0)
         self.__notebook.connect("switch-page", self.__on_switch_tab)
 
-    def __on_switch_tab(self, _notebook, _page, index):
-        self.emit("tab-selected", index)
+    def __on_switch_tab(self, _notebook, page, index):
+        playlist = page.get_children()[0].get_children()[0]
+        self.emit("tab-selected", playlist.uuid)
 
     def __toggle_show_tabs(self):
         if self.__notebook.get_n_pages() > 1:
@@ -65,46 +67,39 @@ class BeatWindow(Gtk.ApplicationWindow):
     def __on_playlist_chaned(self, playlist):
         self.emit("playlist-changed", playlist)
 
-    def create_playlist_tab(self, label, rows=None, current=False, silent=False) -> PlayList:
-        playlist = PlayList(self.__app, label)
+    def create_playlist_tab(self, label, rows=None, uuid=None, selected=False) -> PlayList:
+        playlist = PlayList(self.__app, label, uuid)
         playlist.connect("changed", self.__on_playlist_chaned)
         scrollbox = Gtk.ScrolledWindow()
         scrollbox.add_with_viewport(playlist)
         if rows:
             for row in rows:
-                playlist.add_row([row.get(c) for c in PLAYLIST_COLS], silent=silent)
+                playlist.add_row([row.get(c) for c in PLAYLIST_COLS])
 
-        tab = Tab(label, scrollbox)
-        tab.connect("deleted", self.__on_delete_tab)
-        tab.connect("renamed", self.__on_rename_tab)
+        tab = Tab(label)
+        tab.connect("deleted", self.__on_delete_tab, playlist)
+        tab.connect("renamed", self.__on_rename_tab, playlist)
         scrollbox.show_all()
 
         page = self.__notebook.append_page(scrollbox, tab)
         self.__toggle_show_tabs()
-        if current:
-            self.select_tab(page)
+        if selected:
+            self.__notebook.set_current_page(page)
         return playlist
 
-    def __on_rename_tab(self, tab, label):
-        page = self.__notebook.child_get_property(tab.tab_content, "position")
-        self.emit("tab-renamed", page, label)
+    def __on_rename_tab(self, _tab, label, playlist):
+        self.emit("tab-renamed", playlist.uuid, label)
 
-    def __on_delete_tab(self, tab):
-        print(tab)
-        # self.__notebook.remove_page(index)
-        # self.__toggle_show_tabs()
+    def __on_delete_tab(self, tab, playlist):
+        page = self.__notebook.page_num(playlist.get_parent().get_parent())
+        if not page:
+            return
 
-    def select_tab(self, index, silent=False):
-        if index is None:
-            index = -1
-
-        tabs_count = self.__notebook.get_n_pages()
-        if tabs_count < index:
-            index = 0
-
-        self.__notebook.set_current_page(index)
-
-        self.emit("tab-selected", index)
+        if page == self.__notebook.get_current_page():
+            self.__notebook.set_current_page(0)
+        self.__notebook.remove_page(page)
+        self.__toggle_show_tabs()
+        self.emit("tab-removed", playlist.uuid)
 
     @GObject.Property(type=PlayList, default=None,
                       flags=GObject.ParamFlags.READABLE)
@@ -114,3 +109,4 @@ class BeatWindow(Gtk.ApplicationWindow):
             return None
 
         return scrollbox.get_children()[0].get_children()[0]
+

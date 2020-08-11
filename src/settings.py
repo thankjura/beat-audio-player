@@ -1,6 +1,8 @@
 import configparser
 import csv
+import re
 from pathlib import Path
+from uuid import uuid4
 
 from gi.repository import GObject, GLib
 
@@ -8,7 +10,24 @@ from gi.repository import GObject, GLib
 __all__= ["Settings"]
 
 
-PLAYLIST_NAME_TEMPLATE = "Playlist {}"
+uuid_regexp = re.compile('^[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}\Z', re.I)
+
+
+class BeatConfig(configparser.ConfigParser):
+    def __init__(self, *args, **kwargs):
+        super().__init__(default_section="main", *args, **kwargs)
+
+    def set_value(self, section, param, value):
+        if value is not None:
+            value = str(value)
+        if not section in self:
+            self[section] = {}
+        self.set(section, param, value)
+
+    def get_value(self, section, param):
+        if not section in self:
+            return None
+        return self.get(section, param, fallback=None)
 
 
 class Settings:
@@ -16,12 +35,13 @@ class Settings:
         self.__app = app
         self.__config_dir = Path(GLib.get_user_config_dir(), "beat")
         self.__config_file = Path(self.__config_dir, "config.ini")
-        self.__config = configparser.ConfigParser(default_section="main")
+        self.__config = BeatConfig()
         self.__init_dirs()
         self.__load()
         self.__app.props.win.connect("playlist-changed", self.__on_playlist_changed)
         self.__app.props.win.connect("tab-selected", self.__on_playlist_switch)
         self.__app.props.win.connect("tab-renamed", self.__on_playlist_renamed)
+        self.__app.props.win.connect("tab-removed", self.__on_playlist_removed)
 
     def __init_dirs(self):
         if not self.__config_dir.exists():
@@ -31,30 +51,36 @@ class Settings:
         self.__config.read(self.__config_file)
 
         for p in self.__get_playlists():
-            self.__app.props.win.create_playlist_tab(p.get("label"), p.get("rows"), silent=True)
-
-        selected_tab = self.__config["main"].get("playlist")
-        if selected_tab is not None:
-            self.__app.props.win.select_tab(int(selected_tab), silent=True)
+            self.__app.props.win.create_playlist_tab(label=p.get("label"),
+                                                     rows=p.get("rows"),
+                                                     uuid=p.get("uuid"),
+                                                     selected=p.get("selected"))
 
     def __save(self):
         with self.__config_file.open('w') as f:
             self.__config.write(f)
 
+        print("Config saved")
+
+    def __get_playlist_keys(self):
+        return [k for k in self.__config if uuid_regexp.match(k)]
+
     def __get_playlists(self):
         out = []
         need_save = False
-        playlists = sorted([p for p in self.__config.keys() if p.lower().startswith("playlist")])
-        for p in playlists:
-            filename = self.__config[p].get('file')
+
+        selected_uuid = self.__config.get_value("main", "selected")
+
+        for p in self.__get_playlist_keys():
+            filename = self.__config.get_value(p, 'file')
             if not filename:
-                del self.__config[p]
+                self.__config.remove_section(p)
                 need_save = True
                 continue
 
             playlist_file = Path(self.__config_dir, filename)
             if not playlist_file.exists():
-                del self.__config[p]
+                self.__config.remove_section(p)
                 need_save = True
                 continue
 
@@ -66,24 +92,31 @@ class Settings:
 
             out.append({
                 "label": self.__config[p].get('label'),
-                "rows": rows
+                "rows": rows,
+                "uuid": p,
+                "position": self.__config[p].get('position'),
+                "selected": selected_uuid and selected_uuid == p
             })
 
+            out.sort(key=lambda x: x.get("position"))
+
         if need_save:
-            self.save()
+            self.__save()
 
         return out
 
-    def __on_playlist_changed(self, win, playlist):
-        index = playlist.props.index
-        if index is None:
+    def __on_playlist_changed(self, _win, playlist):
+        uuid = playlist.uuid
+        if uuid is None:
             return
 
-        filename = f"playlist_{index:03d}.csv"
-        self.__config[PLAYLIST_NAME_TEMPLATE.format(index)] = {
-            "label": playlist.props.label,
-            "file": filename
-        }
+        filename = self.__config.get_value(uuid, "file")
+        if not filename:
+            filename = f"{uuid}.csv"
+            self.__config.set_value(uuid, "file", filename)
+        self.__config.set_value(uuid, "label", playlist.props.label)
+        self.__config.set_value(uuid, "position", playlist.props.index)
+        #self.__config.set_value(uuid, "selected", playlist.is_visible())
         self.__save()
 
         cols = playlist.get_cols()
@@ -94,16 +127,24 @@ class Settings:
             for row in playlist.get_rows():
                 writer.writerow(row)
 
-    def __on_playlist_switch(self, _win, index):
-        self.__config["main"]["playlist"] = str(index)
+            print(f"Playlist {playlist.props.label} saved")
+
+    def __on_playlist_switch(self, _win, uuid):
+        self.__config.set_value("main", "selected", str(uuid))
         self.__save()
 
-    def __on_playlist_renamed(self, _win, index, label):
-        playlist_name = PLAYLIST_NAME_TEMPLATE.format(index)
-        if not playlist_name in self.__config:
-            self.__config[playlist_name] = {}
-        self.__config[playlist_name]['label'] = label
+    def __on_playlist_renamed(self, _win, uuid, label):
+        self.__config.set_value(uuid, "label", label)
         self.__save()
 
-    def get_playlist_index(self):
-        return None
+    def __on_playlist_removed(self, _win, uuid):
+        if not uuid in self.__config:
+            return
+
+        filename = self.__config.get_value(uuid, 'file')
+        if filename:
+            Path(self.__config_dir, filename).unlink(True)
+
+        self.__config.remove_section(uuid)
+        self.__save()
+

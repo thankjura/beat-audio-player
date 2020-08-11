@@ -30,17 +30,20 @@ class HeaderBar(Gtk.HeaderBar):
             Gtk.ResponseType.OK,
         )
 
-        if keep_tab:
-            playlist = self.__app.props.win.props.playlist
-            if playlist is None:
-                playlist = self.__app.props.win.create_playlist_tab("playlist", current=True)
-        else:
-            playlist = self.__app.props.win.create_playlist_tab("playlist", current=True)
-
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
+
+            playlist = None
+
+            if keep_tab:
+                playlist = self.__app.props.win.props.playlist
+
+            if playlist is None:
+                playlist = self.__app.props.win.create_playlist_tab("playlist", selected=True)
+
             for uri in dialog.get_filenames():
                 playlist.add_tracks(uri, None, True)
+            playlist.emit("changed")
 
         dialog.destroy()
 
@@ -62,7 +65,7 @@ class HeaderBar(Gtk.HeaderBar):
         if self.__player.props.state == Playback.PLAYING:
             self.__player.pause()
         else:
-            track = self.__app.props.win.playlist.get_selected()
+            track = self.__app.props.win.props.playlist.get_selected()
             if track:
                 self.__player.play(track)
 

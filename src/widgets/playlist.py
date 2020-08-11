@@ -1,6 +1,10 @@
 from pathlib import Path
 from urllib.parse import unquote
+
+from gettext import gettext as _
 from gi.repository import Gtk, Gdk, GObject
+from uuid import uuid4
+
 from ..utils.track_info import TrackInfo
 
 __all__ = ["PlayList"]
@@ -15,10 +19,7 @@ PLAYLIST_COLS = {
 }
 
 TARGETS = [
-        ('GTK_LIST_BOX_ROW',    Gtk.TargetFlags.SAME_WIDGET, 0),
-        ('text/plain',          0, 1),
-        ('TEXT',                0, 2),
-        ('STRING',              0, 3),
+        ('GTK_LIST_BOX_ROW',    Gtk.TargetFlags.SAME_WIDGET, 0)
 ]
 
 
@@ -41,23 +42,41 @@ class PlayList(Gtk.TreeView):
     }
 
 
-    def __init__(self, app, label):
+    def __init__(self, app, label, uuid=None):
         super().__init__()
         self.__app = app
         self.__label = label
+        self.__uuid = uuid if uuid else str(uuid4())
         self.__selection = self.get_selection()
+
+        # store
         self.__store = PlayListStore()
+        self.__store.connect("row-changed", self.__save_playlist)
+        self.__store.connect("row-deleted", self.__save_playlist)
+        self.__store.connect("rows-reordered", self.__save_playlist)
+
         self.__player = self.__app.props.player
         self.__cols = PLAYLIST_COLS
+
+        self.props.activate_on_single_click = False
         self.set_model(self.__store)
 
-        self.connect("button-press-event", self.__on_button_press)
+        # right click menu
+        self.__menu = Gtk.Menu()
+        menu_delete_item = Gtk.MenuItem(_("Delete"))
+        menu_delete_item.connect("activate", self.__on_row_delete)
+        self.__menu.add(menu_delete_item)
+        self.__menu.show_all()
+
+        # enable dnd
+        self.connect("row-activated", self.__on_row_activated)
         self.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
                     TARGETS, Gdk.DragAction.DEFAULT | Gdk.DragAction.MOVE)
         self.enable_model_drag_dest(TARGETS, Gdk.DragAction.DEFAULT)
         self.drag_dest_add_text_targets()
         self.drag_source_add_text_targets()
 
+        # make cols
         for col_index, col in enumerate(PLAYLIST_COLS.keys()):
             if col.startswith("_"):
                 continue
@@ -69,19 +88,29 @@ class PlayList(Gtk.TreeView):
         self.connect("drag_data_get", self.__on_data_get)
         self.connect("drag_data_received", self.__on_data_drop)
         self.connect("drag_data_delete", self.__on_data_delete)
-        self.__row_changed_handler_id = self.__store.connect("row-changed", self.__save_playlist)
-        self.__row_deleted_handler_id = self.__store.connect("row-deleted", self.__save_playlist)
-        self.__row_inserted_handler_id = self.__store.connect("row-inserted", self.__save_playlist)
-        self.__rows_reordered_handler_id = self.__store.connect("rows-reordered", self.__save_playlist)
+        self.connect("button_press_event", self.__on_row_press)
+
+    def __on_row_delete(self, _view):
+        model, tree_iter = self.__selection.get_selected()
+        if tree_iter is not None:
+            return model.remove(tree_iter)
+
+    def __on_row_press(self, _widget, event):
+        if event.type != Gdk.EventType.BUTTON_PRESS:
+            return
+        if event.get_button().button != 3:
+            return
+        self.__menu.popup(None, None, None, None, 0, Gtk.get_current_event_time())
 
     def __save_playlist(self, *args):
         self.emit("changed")
 
-    def __on_button_press(self, view, event):
-        if event.type != Gdk.EventType.DOUBLE_BUTTON_PRESS:
-            return
+    def __on_row_activated(self, _view, _path, _column):
+        #if event.type != Gdk.EventType.DOUBLE_BUTTON_PRESS:
+        #    return
         track = self.get_selected()
         if track:
+            self.__player.stop()
             self.__player.play(track)
 
 
@@ -138,6 +167,7 @@ class PlayList(Gtk.TreeView):
             for p in paths:
                 filepath = unquote(p.strip().replace("file://", "", 1))
                 self.add_tracks(filepath, position_iter, insert_after)
+            self.emit("changed")
 
     def get_selected(self):
         model, tree_iter = self.__selection.get_selected()
@@ -165,7 +195,7 @@ class PlayList(Gtk.TreeView):
                 self.__selection.select_iter(next_iter)
                 return model[next_iter][0]
 
-    def add_tracks(self, path, position_iter, insert_after, silent=False):
+    def add_tracks(self, path, position_iter, insert_after):
         path = Path(path)
         if not path.exists():
             return False
@@ -173,10 +203,7 @@ class PlayList(Gtk.TreeView):
         if path.is_file():
             return self.add_track(str(path), position_iter, insert_after)
 
-    def add_row(self, row, position_iter=None, insert_after=True, silent=False):
-        if silent:
-            self.__store.handler_block(self.__row_inserted_handler_id)
-
+    def add_row(self, row, position_iter=None, insert_after=True):
         if position_iter:
             if insert_after:
                 self.__store.insert_after(position_iter, row)
@@ -185,11 +212,8 @@ class PlayList(Gtk.TreeView):
         else:
             self.__store.append(row)
 
-        if silent:
-            self.__store.handler_unblock(self.__row_inserted_handler_id)
 
-
-    def add_track(self, url: str, position_iter=None, insert_after=True, silent=False) -> bool:
+    def add_track(self, url: str, position_iter=None, insert_after=True) -> bool:
         info = TrackInfo(url)
         if not info.is_valid():
             return False
@@ -221,3 +245,7 @@ class PlayList(Gtk.TreeView):
         if not notebook:
             return None
         return notebook.page_num(scrollbox)
+
+    @property
+    def uuid(self):
+        return self.__uuid

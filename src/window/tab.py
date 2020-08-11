@@ -11,32 +11,31 @@ class Tab(Gtk.Box):
     }
 
 
-    def __init__(self, label, tab_content, **kwargs):
+    def __init__(self, label, **kwargs):
         super().__init__(Gtk.Orientation.HORIZONTAL, spacing=10)
-        self.__tab_content = tab_content
         self.__label = Gtk.Label(label)
         self.__event_box = Gtk.EventBox()
-        self.__menu = Gtk.Menu()
-        self.__menu_rename_item = Gtk.MenuItem(_("Rename"))
-        self.__menu_delete_item = Gtk.MenuItem(_("Delete"))
-        self.__menu.add(self.__menu_rename_item)
-        self.__menu.add(self.__menu_delete_item)
-        self.__menu.show_all()
         self.__event_box.add(self.__label)
+        self.__event_box.connect("button-press-event", self.__on_button_press)
 
+        # popup menu
+        self.__menu = Gtk.Menu()
+        menu_rename_item = Gtk.MenuItem(_("Rename"))
+        menu_delete_item = Gtk.MenuItem(_("Delete"))
+        menu_rename_item.connect("activate", self.__on_rename)
+        menu_delete_item.connect("activate", self.__on_delete)
+        self.__menu.add(menu_rename_item)
+        self.__menu.add(menu_delete_item)
+        self.__menu.show_all()
+
+        # popover for edit
         self.__edit_popower = Gtk.Popover()
-
         self.__entry = Gtk.Entry()
         self.__entry.set_max_length(50)
         self.__edit_popower.add(self.__entry)
-
-        self.pack_start(self.__event_box, True, True, 0)
-
-        self.__event_box.connect("button-press-event", self.__on_button_press)
-        self.__menu_rename_item.connect("activate", self.__on_rename)
-        self.__menu_delete_item.connect("activate", self.__on_delete)
         self.__entry.connect("activate", self.__on_entry_changed)
 
+        self.pack_start(self.__event_box, True, True, 0)
         self.show_all()
 
     def __on_button_press(self, _widget, event):
@@ -59,6 +58,3 @@ class Tab(Gtk.Box):
         self.__edit_popower.hide()
         self.emit("renamed", self.__label.get_text())
 
-    @property
-    def tab_content(self):
-        return self.__tab_content
