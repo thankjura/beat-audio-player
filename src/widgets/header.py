@@ -62,17 +62,7 @@ class HeaderBar(Gtk.HeaderBar):
 
     @Gtk.Template.Callback()
     def _on_play(self, button):
-        if self.__player.props.state == Playback.PLAYING:
-            self.__player.pause()
-        else:
-            playlist = self.__app.props.win.props.playlist
-            tracks = playlist.get_selected()
-            if tracks:
-                self.__player.play(tracks[0])
-            else:
-                track = playlist.get_first_and_activate()
-                if track:
-                    self.__player.play(track)
+        self.__app.props.win.props.playlist.play()
 
     @Gtk.Template.Callback()
     def _on_prev(self, button):

@@ -56,6 +56,9 @@ class Application(Gtk.Application):
             for f in files:
                 playlist.add_tracks(f)
 
+            if not options.contains("append"):
+                playlist.play()
+
         return 0
 
     @GObject.Property(type=Player, default=None,

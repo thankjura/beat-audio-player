@@ -7,6 +7,7 @@ from uuid import uuid4
 
 from .cell_renderers import CellRendererActiveTrack
 from ..utils.track_info import TrackInfo
+from ..player import Playback
 
 __all__ = ["PlayList"]
 
@@ -287,6 +288,18 @@ class PlayList(Gtk.TreeView):
 
     def get_rows(self):
         return [t[:] for t in self.__store]
+
+    def play(self):
+        if self.__player.props.state == Playback.PLAYING:
+            self.__player.pause()
+        else:
+            tracks = self.get_selected()
+            if tracks:
+                self.__player.play(tracks[0])
+            else:
+                track = self.get_first_and_activate()
+                if track:
+                    self.__player.play(track)
 
     @GObject.Property(type=str, default="playlist",
                       flags=GObject.ParamFlags.READABLE)
