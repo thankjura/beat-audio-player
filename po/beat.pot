@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-12 18:58+0300\n"
+"POT-Creation-Date: 2020-08-12 19:25+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,8 +21,12 @@ msgstr ""
 msgid "Beat audio player"
 msgstr ""
 
-#: data/ru.slie.beat.desktop.in:15
+#: data/ru.slie.beat.desktop.in:16
 msgid "Open in Beat"
+msgstr ""
+
+#: data/ru.slie.beat.desktop.in:20
+msgid "Add to playlist(Beat)"
 msgstr ""
 
 #: data/ru.slie.beat.appdata.xml.in:6
@@ -49,7 +53,7 @@ msgstr ""
 msgid "Append to current playlist instead of create new"
 msgstr ""
 
-#: src/application.py:54 src/application.py:76
+#: src/application.py:54 src/application.py:79
 msgid "new playlist"
 msgstr ""
 
@@ -57,22 +61,22 @@ msgstr ""
 msgid "Rename"
 msgstr ""
 
-#: src/window/tab.py:24 src/widgets/playlist.py:71
+#: src/window/tab.py:24 src/widgets/playlist.py:72
 msgid "Delete"
 msgstr ""
 
-#: src/widgets/playlist.py:23
+#: src/widgets/playlist.py:24
 msgid "Artist"
 msgstr ""
 
-#: src/widgets/playlist.py:24
+#: src/widgets/playlist.py:25
 msgid "Album"
 msgstr ""
 
-#: src/widgets/playlist.py:25
+#: src/widgets/playlist.py:26
 msgid "Title"
 msgstr ""
 
-#: src/widgets/playlist.py:26
+#: src/widgets/playlist.py:27
 msgid "Length"
 msgstr ""
