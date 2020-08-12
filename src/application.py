@@ -18,7 +18,7 @@
 import sys
 import gi
 
-from gi.repository import Gtk, Gio, GObject
+from gi.repository import Gtk, Gio, GObject, GLib
 from gettext import gettext as _
 
 from .window import BeatWindow
@@ -32,10 +32,31 @@ __all__ = ["Application"]
 class Application(Gtk.Application):
     def __init__(self):
         super().__init__(application_id='ru.slie.beat',
-                         flags=Gio.ApplicationFlags.FLAGS_NONE)
+                         flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
 
         self.__window = None
         self.__player = Player(self)
+
+        self.connect("command-line", self.__on_command_line)
+        # command line
+        self.add_main_option("append", ord("a"), GLib.OptionFlags.NONE, GLib.OptionArg.NONE, _("Append to current playlist instead of create new"), None)
+
+    def __on_command_line(self, _app, command_line):
+        options = command_line.get_options_dict()
+        self.activate()
+
+        files = command_line.get_arguments()[1:]
+        if files:
+            playlist = None
+            if options.contains("append"):
+                playlist = self.__window.props.playlist
+            if not playlist:
+                playlist = self.__window.create_playlist_tab(_("new playlist"), selected=True)
+
+            for f in files:
+                playlist.add_tracks(f)
+
+        return 0
 
     @GObject.Property(type=Player, default=None,
                       flags=GObject.ParamFlags.READABLE)

@@ -267,7 +267,7 @@ class PlayList(Gtk.TreeView):
         if path.is_dir():
             for p in path.iterdir():
                 self.add_tracks(str(p), position_iter=None, insert_after=True)
-                return True
+            return True
 
         info = TrackInfo(path)
         if not info.is_valid():
