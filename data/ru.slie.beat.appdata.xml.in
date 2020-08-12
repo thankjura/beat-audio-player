@@ -3,6 +3,14 @@
 	<id>ru.slie.beat.desktop</id>
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>GPL-3.0-or-later</project_license>
+  <name>Beat</name>
+  <summary>Lightweight audio player</summary>
 	<description>
+	    Simple audio player for gnome
 	</description>
+  <url type="homepage">https://github.com/thankjura/beat-audio-player</url>
+  <screenshots>
+    <screenshot type="default">https://github.com/thankjura/beat-audio-player/raw/master/data/screenshots/1.png</screenshot>
+    <screenshot>https://github.com/thankjura/beat-audio-player/raw/master/data/screenshots/2.png</screenshot>
+  </screenshots>
 </component>

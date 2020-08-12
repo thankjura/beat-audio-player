@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beat-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-12 02:42+0300\n"
-"PO-Revision-Date: 2020-08-12 02:42+0300\n"
+"POT-Creation-Date: 2020-08-12 18:58+0300\n"
+"PO-Revision-Date: 2020-08-12 19:04+0300\n"
 "Last-Translator: thankjura <me@slie.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -23,6 +23,26 @@ msgstr ""
 "X-Poedit-SearchPath-0: src\n"
 "X-Poedit-SearchPath-1: data\n"
 
+#: data/ru.slie.beat.desktop.in:3
+msgid "Beat audio player"
+msgstr "Beat аудио плеер"
+
+#: data/ru.slie.beat.desktop.in:15
+msgid "Open in Beat"
+msgstr "Открыть в Beat"
+
+#: data/ru.slie.beat.appdata.xml.in:6
+msgid "Beat"
+msgstr "Beat"
+
+#: data/ru.slie.beat.appdata.xml.in:7
+msgid "Lightweight audio player"
+msgstr "Легковесный аудио плеер"
+
+#: data/ru.slie.beat.appdata.xml.in:8
+msgid "Simple audio player for gnome"
+msgstr "Простой аудиоплеер для gnome"
+
 #: data/ui/header.ui:9
 msgid "beat"
 msgstr ""
@@ -31,9 +51,21 @@ msgstr ""
 msgid "label"
 msgstr ""
 
-#: src/application.py:55
+#: src/application.py:42
+msgid "Append to current playlist instead of create new"
+msgstr "Добавить в текущий плейлист, а не создавать новый"
+
+#: src/application.py:54 src/application.py:76
 msgid "new playlist"
 msgstr "новый плейлист"
+
+#: src/window/tab.py:23
+msgid "Rename"
+msgstr "Переименовать"
+
+#: src/window/tab.py:24 src/widgets/playlist.py:71
+msgid "Delete"
+msgstr "Удалить"
 
 #: src/widgets/playlist.py:23
 msgid "Artist"
@@ -50,11 +82,3 @@ msgstr "Название"
 #: src/widgets/playlist.py:26
 msgid "Length"
 msgstr "Продолжительность"
-
-#: src/widgets/playlist.py:71 src/window/tab.py:24
-msgid "Delete"
-msgstr "Удалить"
-
-#: src/window/tab.py:23
-msgid "Rename"
-msgstr "Переименовать"

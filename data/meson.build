@@ -17,10 +17,19 @@ desktop_file = i18n.merge_file(
   install_dir: join_paths(get_option('datadir'), 'applications')
 )
 
+desktop_file_add = i18n.merge_file(
+  input: 'ru.slie.beat.add.desktop.in',
+  output: 'ru.slie.beat.add.desktop',
+  type: 'desktop',
+  po_dir: '../po',
+  install: true,
+  install_dir: join_paths(get_option('datadir'), 'applications')
+)
+
 desktop_utils = find_program('desktop-file-validate', required: false)
 if desktop_utils.found()
   test('Validate desktop file', desktop_utils,
-    args: [desktop_file]
+    args: [desktop_file, desktop_file_add]
   )
 endif
 
@@ -49,3 +58,6 @@ if compile_schemas.found()
     args: ['--strict', '--dry-run', meson.current_source_dir()]
   )
 endif
+
+install_scalable_iconpath = join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps')
+install_data('icons/beat.svg', install_dir: install_scalable_iconpath)

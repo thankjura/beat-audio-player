@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-12 02:41+0300\n"
+"POT-Creation-Date: 2020-08-12 18:58+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/ru.slie.beat.desktop.in:3 data/ui/header.ui:9
+#: data/ru.slie.beat.desktop.in:3
+msgid "Beat audio player"
+msgstr ""
+
+#: data/ru.slie.beat.desktop.in:15
+msgid "Open in Beat"
+msgstr ""
+
+#: data/ru.slie.beat.appdata.xml.in:6
+msgid "Beat"
+msgstr ""
+
+#: data/ru.slie.beat.appdata.xml.in:7
+msgid "Lightweight audio player"
+msgstr ""
+
+#: data/ru.slie.beat.appdata.xml.in:8
+msgid "Simple audio player for gnome"
+msgstr ""
+
+#: data/ui/header.ui:9
 msgid "beat"
 msgstr ""
 
@@ -25,7 +45,11 @@ msgstr ""
 msgid "label"
 msgstr ""
 
-#: src/application.py:55
+#: src/application.py:42
+msgid "Append to current playlist instead of create new"
+msgstr ""
+
+#: src/application.py:54 src/application.py:76
 msgid "new playlist"
 msgstr ""
 
