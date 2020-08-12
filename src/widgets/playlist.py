@@ -93,8 +93,8 @@ class PlayList(Gtk.TreeView):
             else:
                 column = Gtk.TreeViewColumn(col["label"], renderer)
                 column.set_cell_data_func(renderer, self.__update_cell_active_track)
-            #if col.get("cell_type") == CellRendererActiveTrack:
-            #    column.set_status(col_index)
+            if col.get("cell_type") == CellRendererActiveTrack:
+                column.set_min_width(24)
             self.append_column(column)
 
         self.connect("drag_data_get", self.__on_data_get)
