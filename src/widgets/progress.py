@@ -1,6 +1,7 @@
 from gi.repository import Gtk, GLib
-from ..utils.track_info import TrackInfo
-from ..player import Playback
+
+from beat.utils.track_info import TrackInfo
+from beat.player import Playback
 
 
 __all__ = ["ProgressBar"]

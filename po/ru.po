@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beat-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-12 19:25+0300\n"
-"PO-Revision-Date: 2020-08-12 19:26+0300\n"
+"POT-Creation-Date: 2020-08-14 01:04+0300\n"
+"PO-Revision-Date: 2020-08-14 01:04+0300\n"
 "Last-Translator: thankjura <me@slie.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -55,11 +55,11 @@ msgstr ""
 msgid "label"
 msgstr ""
 
-#: src/application.py:42
+#: src/application.py:43
 msgid "Append to current playlist instead of create new"
 msgstr "Добавить в текущий плейлист, а не создавать новый"
 
-#: src/application.py:54 src/application.py:79
+#: src/application.py:55 src/application.py:84
 msgid "new playlist"
 msgstr "новый плейлист"
 
@@ -86,3 +86,15 @@ msgstr "Название"
 #: src/widgets/playlist.py:27
 msgid "Length"
 msgstr "Продолжительность"
+
+#: src/utils/track_info.py:20
+msgid "unknown album"
+msgstr "неизвестный альбом"
+
+#: src/utils/track_info.py:27
+msgid "unknown artist"
+msgstr "неизвестный артист"
+
+#: src/utils/track_info.py:34
+msgid "unknown"
+msgstr "неизвестно"

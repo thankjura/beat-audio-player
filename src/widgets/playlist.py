@@ -5,9 +5,9 @@ from gettext import gettext as _
 from gi.repository import Gtk, Gdk, GObject
 from uuid import uuid4
 
-from .cell_renderers import CellRendererActiveTrack
-from ..utils.track_info import TrackInfo
-from ..player import Playback
+from beat.widgets.cell_renderers import *
+from beat.utils.track_info import TrackInfo
+from beat.player import Playback
 
 __all__ = ["PlayList"]
 
@@ -24,7 +24,7 @@ PLAYLIST_COLS = [
     {"key": "artist",   "label": _("Artist"),  "type": str,  "cell_type": Gtk.CellRendererText},
     {"key": "album",    "label": _("Album"),   "type": str,  "cell_type": Gtk.CellRendererText},
     {"key": "title",    "label": _("Title"),   "type": str,  "cell_type": Gtk.CellRendererText},
-    {"key": "length",   "label": _("Length"),  "type": str,  "cell_type": Gtk.CellRendererText},
+    {"key": "length",   "label": _("Length"),  "type": str,  "cell_type": CellRendererDuration},
 ]
 
 
@@ -89,7 +89,7 @@ class PlayList(Gtk.TreeView):
 
 
             renderer = col.get("cell_type")()
-            if col.get("cell_type") == Gtk.CellRendererText:
+            if issubclass(col.get("cell_type"), Gtk.CellRendererText):
                 column = Gtk.TreeViewColumn(col["label"], renderer, text=col_index)
             else:
                 column = Gtk.TreeViewColumn(col["label"], renderer)
@@ -256,14 +256,16 @@ class PlayList(Gtk.TreeView):
                 self.add_tracks(str(p), position_iter=None, insert_after=True)
             return True
 
-        info = TrackInfo(path)
-        if not info.is_valid():
+        try:
+            info = TrackInfo(path)
+        except:
             return False
+
         row = [str(path), False,
-               info.get_tag("artist"),
-               info.get_tag("album"),
-               info.get_tag("title"),
-               info.get_len_str()]
+               info.artist,
+               info.album,
+               info.title,
+               info.duration_str]
         self.add_row(row, position_iter, insert_after)
 
 

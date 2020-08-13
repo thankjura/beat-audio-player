@@ -1,2 +1,2 @@
-from .main import BeatWindow
+from beat.window.main import BeatWindow
 

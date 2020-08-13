@@ -21,10 +21,10 @@ import gi
 from gi.repository import Gtk, Gio, GObject, GLib
 from gettext import gettext as _
 
-from .window import BeatWindow
-from .player import Player
-from .settings import Settings
-from .components.indicator import StatusIndicator
+from beat.window import BeatWindow
+from beat.player import Player
+from beat.settings import Settings
+from beat.components.indicator import StatusIndicator
 
 
 __all__ = ["Application"]
@@ -41,7 +41,6 @@ class Application(Gtk.Application):
         self.connect("command-line", self.__on_command_line)
         # command line
         self.add_main_option("append", ord("a"), GLib.OptionFlags.NONE, GLib.OptionArg.NONE, _("Append to current playlist instead of create new"), None)
-        print(dir(self))
 
     def __on_command_line(self, _app, command_line):
         options = command_line.get_options_dict()

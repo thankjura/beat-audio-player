@@ -3,6 +3,7 @@ data/ru.slie.beat.appdata.xml.in
 data/ru.slie.beat.gschema.xml
 data/ui/window.ui
 data/ui/header.ui
+data/ui/footer.ui
 data/ui/progress.ui
 src/application.py
 src/window/main.py
@@ -10,7 +11,9 @@ src/window/tab.py
 src/player.py
 src/settings.py
 src/widgets/header.py
+src/widgets/footer.py
 src/widgets/playlist.py
 src/widgets/progress.py
 src/widgets/cell_renderers.py
+src/utils/track_info.py
 

@@ -8,11 +8,7 @@ APPLICATION_ID = 'ru.slie.beat'
 i18n = import('i18n')
 python = import('python')
 
-py_installation = python.find_installation('python3',
-  modules: [
-    'mutagen'
-  ]
-)
+py_installation = python.find_installation('python3')
 if not py_installation.found()
     error('No valid python3 binary found')
 endif
@@ -28,6 +24,8 @@ dependency('pygobject-3.0', version: '>= 3.36.1')
 subdir('data')
 subdir('src')
 subdir('po')
+
+install_subdir('third_party/tinytag/tinytag', install_dir: moduledir)
 
 conf = configuration_data()
 conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))

@@ -1,5 +1,5 @@
 from gi.repository import Gtk
-from ..player import Playback
+from beat.player import Playback
 
 
 __all__ = ["HeaderBar"]

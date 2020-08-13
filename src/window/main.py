@@ -18,10 +18,10 @@
 from gi.repository import Gtk, GObject, Gdk
 from gettext import gettext as _
 
-from .tab import Tab
-from ..widgets.header import HeaderBar
-from ..widgets.progress import ProgressBar
-from ..widgets.playlist import PlayList
+from beat.window.tab import Tab
+from beat.widgets.header import HeaderBar
+from beat.widgets.progress import ProgressBar
+from beat.widgets.playlist import PlayList
 
 
 __all__ = ["BeatWindow"]

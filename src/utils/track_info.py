@@ -1,29 +1,50 @@
-from mutagen import File
+from gettext import gettext as _
+
+from beat.tinytag import TinyTag
+
 
 __all__ = ["TrackInfo"]
 
+
 class TrackInfo:
-    def __init__(self, url):
-        self.__file = File(url)
+    def __init__(self, url, image=False):
+        self.__tag = TinyTag.get(url)
 
     def is_valid(self):
-        return self.__file is not None
+        return self.__tag is not None
 
-    def get_tag(self, tag_name) -> str:
-        if not self.__file.tags:
-            return "unknown"
-        value = self.__file.tags.get(tag_name)
+    @property
+    def album(self):
+        value = self.__tag.album
         if not value:
-            return "unknown"
-
-        if isinstance(value, list):
-            return value[0]
-
+            return _("unknown album")
         return value
 
-    def get_len_str(self) -> str:
-        seconds = self.__file.info.length
-        return self.get_time_str(seconds)
+    @property
+    def artist(self):
+        value = self.__tag.artist
+        if not value:
+            return _("unknown artist")
+        return value
+
+    @property
+    def title(self):
+        value = self.__tag.title
+        if not value:
+            return _("unknown")
+        return value
+
+    @property
+    def duration(self):
+        return self.__tags.duration
+
+    @property
+    def duration_str(self):
+        return self.get_time_str(self.__tags.duration)
+
+    @property
+    def get_image(self):
+        return None
 
     @staticmethod
     def get_time_str(seconds) -> str:

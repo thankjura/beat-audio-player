@@ -1,7 +1,7 @@
 from gi.repository import Gtk, GdkPixbuf
 
 
-__all__ = ['CellRendererActiveTrack',]
+__all__ = ['CellRendererActiveTrack', 'CellRendererDuration']
 
 
 class CellRendererActiveTrack(Gtk.CellRendererPixbuf):
@@ -16,3 +16,9 @@ class CellRendererActiveTrack(Gtk.CellRendererPixbuf):
             self.set_property("pixbuf", self.__ACTIVE_PB)
         else:
             self.set_property("pixbuf", None)
+
+class CellRendererDuration(Gtk.CellRendererText):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    
