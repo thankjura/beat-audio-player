@@ -233,20 +233,6 @@ class PlayList(Gtk.TreeView):
             self.__set_active(tree_iter)
             return self.__store[tree_iter][0]
 
-    def get_prev_and_activate(self):
-        if self.__active_iter:
-            prev_iter = self.__store.iter_previous(self.__active_iter)
-            if prev_iter:
-                self.__set_active(prev_iter)
-                return self.__store[prev_iter][0]
-
-    def get_next_and_activate(self):
-        if self.__active_iter:
-            next_iter = self.__store.iter_next(self.__active_iter)
-            if next_iter:
-                self.__set_active(next_iter)
-                return self.__store[next_iter][0]
-
     def add_row(self, row, position_iter=None, insert_after=True):
         #if isinstance(row[1], str):
             # row[1] = row[1] == "True"
@@ -288,6 +274,29 @@ class PlayList(Gtk.TreeView):
 
     def get_rows(self):
         return [t[:] for t in self.__store]
+
+    def play_prev(self):
+        if self.__player.props.state != Playback.PLAYING:
+            return
+
+        if self.__active_iter:
+            prev_iter = self.__store.iter_previous(self.__active_iter)
+            if prev_iter:
+                self.__set_active(prev_iter)
+                self.__player.play(self.__store[prev_iter][0])
+
+    def play_next(self):
+        if self.__player.props.state != Playback.PLAYING:
+            return
+
+        if self.__active_iter:
+            next_iter = self.__store.iter_next(self.__active_iter)
+            if next_iter:
+                self.__set_active(next_iter)
+                self.__player.play(self.__store[next_iter][0])
+
+    def stop(self):
+        self.__player.stop()
 
     def play(self):
         if self.__player.props.state == Playback.PLAYING:

@@ -24,14 +24,15 @@ from gettext import gettext as _
 from .window import BeatWindow
 from .player import Player
 from .settings import Settings
+from .components.indicator import StatusIndicator
 
 
 __all__ = ["Application"]
 
 
 class Application(Gtk.Application):
-    def __init__(self):
-        super().__init__(application_id='ru.slie.beat',
+    def __init__(self, app_id):
+        super().__init__(application_id=app_id,
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
 
         self.__window = None
@@ -40,6 +41,7 @@ class Application(Gtk.Application):
         self.connect("command-line", self.__on_command_line)
         # command line
         self.add_main_option("append", ord("a"), GLib.OptionFlags.NONE, GLib.OptionArg.NONE, _("Append to current playlist instead of create new"), None)
+        print(dir(self))
 
     def __on_command_line(self, _app, command_line):
         options = command_line.get_options_dict()
@@ -75,6 +77,10 @@ class Application(Gtk.Application):
         if not self.__window:
             self.__window = BeatWindow(self)
             Settings(self)
+            try:
+                StatusIndicator(self)
+            except ImportError:
+                print("Appincicator3 not found")
             if not self.__window.props.playlist:
                 self.__window.create_playlist_tab(_("new playlist"))
         self.__window.present()

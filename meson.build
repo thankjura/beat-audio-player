@@ -3,6 +3,8 @@ project('beat',
     meson_version: '>= 0.51.0'
 )
 
+APPLICATION_ID = 'ru.slie.beat'
+
 i18n = import('i18n')
 python = import('python')
 
@@ -30,6 +32,7 @@ subdir('po')
 conf = configuration_data()
 conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
 conf.set('pkgdatadir', pkgdatadir)
+conf.set('application_id', APPLICATION_ID)
 
 configure_file(
   input: 'beat.in',

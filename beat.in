@@ -26,6 +26,7 @@ import locale
 
 pkgdatadir = '@pkgdatadir@'
 localedir = '@localedir@'
+application_id = '@application_id@'
 
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -57,7 +58,7 @@ def set_internationalization():
 def run_application():
     from beat.application import Application
 
-    app = Application()
+    app = Application(application_id)
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     return app.run(sys.argv)
 
