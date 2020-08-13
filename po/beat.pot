@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-14 01:04+0300\n"
+"POT-Creation-Date: 2020-08-14 01:07+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,4 +91,24 @@ msgstr ""
 
 #: src/utils/track_info.py:34
 msgid "unknown"
+msgstr ""
+
+#: src/components/indicator.py:19
+msgid "Play"
+msgstr ""
+
+#: src/components/indicator.py:20
+msgid "Pause"
+msgstr ""
+
+#: src/components/indicator.py:24
+msgid "Next"
+msgstr ""
+
+#: src/components/indicator.py:25
+msgid "Prev"
+msgstr ""
+
+#: src/components/indicator.py:26
+msgid "Quit"
 msgstr ""

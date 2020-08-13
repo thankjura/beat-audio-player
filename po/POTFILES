@@ -16,4 +16,5 @@ src/widgets/playlist.py
 src/widgets/progress.py
 src/widgets/cell_renderers.py
 src/utils/track_info.py
+src/components/indicator.py
 

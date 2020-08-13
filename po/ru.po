@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beat-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-14 01:04+0300\n"
-"PO-Revision-Date: 2020-08-14 01:04+0300\n"
+"POT-Creation-Date: 2020-08-14 01:07+0300\n"
+"PO-Revision-Date: 2020-08-14 01:08+0300\n"
 "Last-Translator: thankjura <me@slie.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -98,3 +98,23 @@ msgstr "неизвестный артист"
 #: src/utils/track_info.py:34
 msgid "unknown"
 msgstr "неизвестно"
+
+#: src/components/indicator.py:19
+msgid "Play"
+msgstr "Следующий"
+
+#: src/components/indicator.py:20
+msgid "Pause"
+msgstr "Пауза"
+
+#: src/components/indicator.py:24
+msgid "Next"
+msgstr "Следующий"
+
+#: src/components/indicator.py:25
+msgid "Prev"
+msgstr "Предыдущий"
+
+#: src/components/indicator.py:26
+msgid "Quit"
+msgstr "Выход"
