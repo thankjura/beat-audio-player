@@ -164,3 +164,7 @@ class Player(GObject.GObject):
 
     def set_volume(self, volume: float):
         self.__volume.set_property('volume', volume)
+
+    @property
+    def track_path(self):
+        return self.__source.get_property("location")

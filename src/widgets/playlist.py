@@ -24,7 +24,7 @@ PLAYLIST_COLS = [
     {"key": "artist",   "label": _("Artist"),  "type": str,  "cell_type": Gtk.CellRendererText},
     {"key": "album",    "label": _("Album"),   "type": str,  "cell_type": Gtk.CellRendererText},
     {"key": "title",    "label": _("Title"),   "type": str,  "cell_type": Gtk.CellRendererText},
-    {"key": "length",   "label": _("Length"),  "type": str,  "cell_type": CellRendererDuration},
+    {"key": "length",   "label": _("Length"),  "type": str,  "cell_type": Gtk.CellRendererText},
 ]
 
 

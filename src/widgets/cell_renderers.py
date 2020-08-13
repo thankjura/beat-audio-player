@@ -17,6 +17,8 @@ class CellRendererActiveTrack(Gtk.CellRendererPixbuf):
         else:
             self.set_property("pixbuf", None)
 
+
+# TODO: convert seconds to text
 class CellRendererDuration(Gtk.CellRendererText):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

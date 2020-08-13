@@ -21,6 +21,7 @@ from gettext import gettext as _
 from beat.window.tab import Tab
 from beat.widgets.header import HeaderBar
 from beat.widgets.progress import ProgressBar
+from beat.widgets.footer import StatusBar
 from beat.widgets.playlist import PlayList
 
 
@@ -46,12 +47,14 @@ class BeatWindow(Gtk.ApplicationWindow):
         super().__init__(application=app, **kwargs)
 
         self.__app = app
-        self.__header = HeaderBar(self.__app)
-        self.__progress = ProgressBar(self.__app)
-        self.set_titlebar(self.__header)
+        header = HeaderBar(self.__app)
+        progress = ProgressBar(self.__app)
+        footer = StatusBar(self.__app)
+        self.set_titlebar(header)
 
-        self.__body.pack_start(self.__progress, False, False, 0)
-        self.__body.reorder_child(self.__progress, 0)
+        self.__body.pack_start(progress, False, False, 0)
+        self.__body.pack_end(footer, False, False, 0)
+        self.__body.reorder_child(progress, 0)
         self.__notebook.connect("switch-page", self.__on_switch_tab)
 
     def __on_switch_tab(self, _notebook, page, index):

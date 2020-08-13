@@ -8,7 +8,7 @@ __all__ = ["TrackInfo"]
 
 class TrackInfo:
     def __init__(self, url, image=False):
-        self.__tag = TinyTag.get(url)
+        self.__tag = TinyTag.get(url, image=image)
 
     def is_valid(self):
         return self.__tag is not None
@@ -36,15 +36,14 @@ class TrackInfo:
 
     @property
     def duration(self):
-        return self.__tags.duration
+        return self.__tag.duration
 
     @property
     def duration_str(self):
-        return self.get_time_str(self.__tags.duration)
+        return self.get_time_str(self.__tag.duration)
 
-    @property
     def get_image(self):
-        return None
+        return self.__tag.get_image()
 
     @staticmethod
     def get_time_str(seconds) -> str:

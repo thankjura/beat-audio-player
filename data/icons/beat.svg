@@ -6,15 +6,14 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
-   sodipodi:docname="beat.svg"
-   id="svg1590"
-   version="1.1"
+   width="512"
    height="512"
-   width="512">
+   version="1.1"
+   id="svg1590"
+   sodipodi:docname="beat.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)">
   <metadata
      id="metadata1596">
     <rdf:RDF>
@@ -30,130 +29,72 @@
   <defs
      id="defs1594">
     <linearGradient
-       id="linearGradient874"
-       inkscape:collect="always">
+       id="linearGradient4135"
+       osb:paint="solid">
       <stop
-         id="stop870"
+         style="stop-color:#000000;stop-opacity:1;"
          offset="0"
-         style="stop-color:#740000;stop-opacity:1;" />
-      <stop
-         id="stop872"
-         offset="1"
-         style="stop-color:#740000;stop-opacity:0;" />
+         id="stop4133" />
     </linearGradient>
     <linearGradient
-       osb:paint="solid"
-       id="linearGradient4135">
+       id="linearGradient4127"
+       osb:paint="solid">
       <stop
-         id="stop4133"
+         style="stop-color:#a1b3d4;stop-opacity:1;"
          offset="0"
-         style="stop-color:#000000;stop-opacity:1;" />
+         id="stop4125" />
     </linearGradient>
     <linearGradient
-       osb:paint="solid"
-       id="linearGradient4127">
+       id="linearGradient2183"
+       osb:paint="solid">
       <stop
-         id="stop4125"
+         style="stop-color:#ffffff;stop-opacity:1;"
          offset="0"
-         style="stop-color:#a1b3d4;stop-opacity:1;" />
+         id="stop2181" />
     </linearGradient>
-    <linearGradient
-       osb:paint="solid"
-       id="linearGradient2183">
-      <stop
-         id="stop2181"
-         offset="0"
-         style="stop-color:#ffffff;stop-opacity:1;" />
-    </linearGradient>
-    <radialGradient
-       gradientTransform="matrix(-2.9289963,0.76240626,-0.76321172,-2.9320907,1190.5106,795.13249)"
-       spreadMethod="reflect"
-       gradientUnits="userSpaceOnUse"
-       r="244.46664"
-       fy="240.92244"
-       fx="260.17911"
-       cy="240.92244"
-       cx="260.17911"
-       id="radialGradient876"
-       xlink:href="#linearGradient874"
-       inkscape:collect="always" />
   </defs>
   <sodipodi:namedview
-     inkscape:current-layer="layer4"
-     inkscape:window-maximized="1"
-     inkscape:window-y="27"
-     inkscape:window-x="0"
-     inkscape:cy="332.47345"
-     inkscape:cx="187.52372"
-     inkscape:zoom="0.839"
-     showgrid="false"
-     id="namedview1592"
-     inkscape:window-height="1025"
-     inkscape:window-width="1920"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0"
-     guidetolerance="10"
-     gridtolerance="10"
-     objecttolerance="10"
-     borderopacity="1"
-     bordercolor="#666666"
+     inkscape:document-rotation="0"
      pagecolor="#ffffff"
-     inkscape:document-rotation="0" />
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1025"
+     id="namedview1592"
+     showgrid="false"
+     inkscape:zoom="0.839"
+     inkscape:cx="-52.971226"
+     inkscape:cy="333.97997"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g1588" />
   <title
      id="title1582">KDSTe steel</title>
   <g
-     style="display:inline"
-     inkscape:label="bg_outer"
-     id="layer6"
-     inkscape:groupmode="layer">
+     stroke="#a1b3d4"
+     id="g1588"
+     transform="rotate(35,180.30524,241.34863)">
     <circle
-       r="253"
-       inkscape:label="bg_outer"
-       cy="256"
-       cx="256"
-       id="path878"
-       style="fill:#001233;fill-opacity:1;stroke-width:23.6509;stroke-miterlimit:4;stroke-dasharray:none" />
-  </g>
-  <g
-     style="display:inline"
-     inkscape:label="bg"
-     id="layer4"
-     inkscape:groupmode="layer">
-    <circle
-       r="237.5"
-       inkscape:label="bg_inner"
-       cy="256"
-       cx="256"
-       id="path868"
-       style="fill:url(#radialGradient876);fill-opacity:1;stroke-width:1.31748" />
-  </g>
-  <g
-     style="display:inline"
-     inkscape:label="head"
-     id="layer3"
-     inkscape:groupmode="layer">
-    <g
-       transform="rotate(26.188769,96.405264,228.54971)"
-       id="g1588"
-       stroke="#a1b3d4">
-      <circle
-         inkscape:label="circle1586"
-         style="mix-blend-mode:normal;fill:#740000;fill-opacity:1;fill-rule:nonzero;stroke-width:80.4094;stroke-miterlimit:4;stroke-dasharray:none"
-         id="circle1586"
-         stroke-width="60"
-         r="120"
-         cy="250"
-         cx="250"
-         fill="#ffffff" />
-      <rect
-         inkscape:label="rect2179"
-         ry="19.20916"
-         y="-37.773212"
-         x="201.93726"
-         height="193.24045"
-         width="95.329918"
-         id="rect2179"
-         style="opacity:1;fill:#a1b3d4;fill-opacity:1;fill-rule:nonzero;stroke-width:14.9858;stroke-miterlimit:4;stroke-dasharray:none" />
-    </g>
+       fill="#ffffff"
+       cx="250"
+       cy="250"
+       r="120"
+       stroke-width="60"
+       id="circle1586"
+       style="mix-blend-mode:normal;fill:#740000;fill-opacity:1;fill-rule:nonzero;" />
+    <rect
+       style="opacity:1;fill:#a1b3d4;fill-opacity:1;fill-rule:nonzero"
+       id="rect2179"
+       width="95.329918"
+       height="193.24045"
+       x="201.93726"
+       y="-37.773212"
+       ry="19.20916" />
   </g>
 </svg>
