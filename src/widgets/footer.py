@@ -14,10 +14,9 @@ class StatusBar(Gtk.Box):
     def __init__(self, app):
         super().__init__()
         self.__app = app
-        self.__app.props.player.connect("notify::state", self.__on_player_state)
+        self.__app.queue.props.player.connect("notify::state", self.__on_player_state)
         self.__cover_image = Gtk.Image()
         self.pack_start(self.__cover_image, False, False, 0)
-        self.add(self.__cover_image)
         self.__track_path = None
         self.show_all()
 

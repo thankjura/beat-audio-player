@@ -62,7 +62,7 @@ class PlayList(Gtk.TreeView):
                                     "row-deleted", self.__save_playlist)
         self.__store.connect("rows-reordered", self.__save_playlist)
 
-        self.__player = self.__app.props.player
+        self.__queue = self.__app.props.queue
 
         self.props.activate_on_single_click = False
         self.set_model(self.__store)
@@ -134,15 +134,12 @@ class PlayList(Gtk.TreeView):
         self.emit("changed")
 
     def __on_row_activated(self, _view, path, _column):
-        #if event.type != Gdk.EventType.DOUBLE_BUTTON_PRESS:
-        #    return
         tree_iter = self.__store.get_iter(path)
         if tree_iter:
             self.__set_active(tree_iter)
             track = self.__store[tree_iter][0]
             self.__active_row_id = self.__store[tree_iter][-1]
-            self.__player.stop()
-            self.__player.play(track)
+            self.__queue.playlist_play(self, track)
 
     @staticmethod
     def __on_data_get(view, context, selection_data, info, timestamp):
@@ -227,11 +224,25 @@ class PlayList(Gtk.TreeView):
         if self.__active_iter:
             return model[tree_iter][0]
 
-    def get_first_and_activate(self) -> str:
+    def get_first_and_select(self) -> str:
         tree_iter = self.__store.get_iter_first()
         if tree_iter:
             self.__set_active(tree_iter)
             return self.__store[tree_iter][0]
+
+    def get_next_and_select(self):
+        if self.__active_iter:
+            next_iter = self.__store.iter_next(self.__active_iter)
+            if next_iter:
+                self.__set_active(next_iter)
+                return self.__store[next_iter][0]
+
+    def get_prev_and_select(self):
+        if self.__active_iter:
+            prev_iter = self.__store.iter_previous(self.__active_iter)
+            if prev_iter:
+                self.__set_active(prev_iter)
+                return self.__store[prev_iter][0]
 
     def add_row(self, row, position_iter=None, insert_after=True):
         #if isinstance(row[1], str):
@@ -276,41 +287,6 @@ class PlayList(Gtk.TreeView):
 
     def get_rows(self):
         return [t[:] for t in self.__store]
-
-    def play_prev(self):
-        if self.__player.props.state != Playback.PLAYING:
-            return
-
-        if self.__active_iter:
-            prev_iter = self.__store.iter_previous(self.__active_iter)
-            if prev_iter:
-                self.__set_active(prev_iter)
-                self.__player.play(self.__store[prev_iter][0])
-
-    def play_next(self):
-        if self.__player.props.state != Playback.PLAYING:
-            return
-
-        if self.__active_iter:
-            next_iter = self.__store.iter_next(self.__active_iter)
-            if next_iter:
-                self.__set_active(next_iter)
-                self.__player.play(self.__store[next_iter][0])
-
-    def stop(self):
-        self.__player.stop()
-
-    def play(self):
-        if self.__player.props.state == Playback.PLAYING:
-            self.__player.pause()
-        else:
-            tracks = self.get_selected()
-            if tracks:
-                self.__player.play(tracks[0])
-            else:
-                track = self.get_first_and_activate()
-                if track:
-                    self.__player.play(track)
 
     @GObject.Property(type=str, default="playlist",
                       flags=GObject.ParamFlags.READABLE)

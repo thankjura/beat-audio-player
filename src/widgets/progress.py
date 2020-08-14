@@ -20,7 +20,7 @@ class ProgressBar(Gtk.Box):
         self.__app = app
         self.__current_position_label.set_text("00:00")
         self.__duration_label.set_text("00:00")
-        self.__player = self.__app.props.player
+        self.__player = self.__app.queue.props.player
         self.__player.connect("clock-tick", self.__on_player_clock_tick)
         self.__player.connect("notify::state", self.__on_player_state)
         self.__progress_handler_id = self.__progress_bar.connect("change-value", self.__on_seek)

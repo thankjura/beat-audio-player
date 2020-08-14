@@ -1,7 +1,6 @@
 beat_sources = [
   '__init__.py',
   'application.py',
-  'player.py',
   'settings.py'
 ]
 

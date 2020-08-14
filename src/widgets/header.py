@@ -1,6 +1,6 @@
 from gi.repository import Gtk
-from beat.player import Playback
 
+from beat.components.player import Playback
 
 __all__ = ["HeaderBar"]
 
@@ -15,8 +15,8 @@ class HeaderBar(Gtk.HeaderBar):
     def __init__(self, app):
         super().__init__()
         self.__app = app
-        self.__player = app.props.player
-        self.__player.connect("notify::state", self.__on_player_state)
+        self.__queue = app.props.queue
+        self.__queue.props.player.connect("notify::state", self.__on_player_state)
 
     def __open_files(self, keep_tab: bool):
         dialog = Gtk.FileChooserDialog(
@@ -58,29 +58,29 @@ class HeaderBar(Gtk.HeaderBar):
 
     @Gtk.Template.Callback()
     def _on_stop(self, button):
-        self.__app.props.win.props.playlist.stop()
+        self.__queue.stop()
 
     @Gtk.Template.Callback()
     def _on_play(self, button):
-        self.__app.props.win.props.playlist.play()
+        self.__queue.play()
 
     @Gtk.Template.Callback()
     def _on_prev(self, button):
-        self.__app.props.win.props.playlist.play_prev()
+        self.__queue.play_prev()
 
     @Gtk.Template.Callback()
     def _on_next(self, button):
-        self.__app.props.win.props.playlist.play_next()
+        self.__queue.play_next()
 
     @Gtk.Template.Callback()
     def _on_volume_changed(self, _widget, value):
-        self.__app.props.player.set_volume(value)
+        self.__queue.props.player.set_volume(value)
 
     def __on_player_state(self, player, state):
         player_state = player.props.state
         if player_state == Playback.PLAYING:
-            self.__button_play_img.set_from_icon_name("gtk-media-pause",
-                                                       Gtk.IconSize.BUTTON)
+           self.__button_play_img.set_from_icon_name("gtk-media-pause",
+                                                      Gtk.IconSize.BUTTON)
         else:
-            self.__button_play_img.set_from_icon_name("gtk-media-play",
-                                                       Gtk.IconSize.BUTTON)
+           self.__button_play_img.set_from_icon_name("gtk-media-play",
+                                                      Gtk.IconSize.BUTTON)

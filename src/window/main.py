@@ -106,11 +106,11 @@ class BeatWindow(Gtk.ApplicationWindow):
         self.emit("tab-removed", playlist.uuid)
 
     @GObject.Property(type=PlayList, default=None,
-                      flags=GObject.ParamFlags.READABLE)
+                     flags=GObject.ParamFlags.READABLE)
     def playlist(self):
-        scrollbox = self.__notebook.get_nth_page(self.__notebook.get_current_page())
-        if scrollbox is None:
-            return None
+       scrollbox = self.__notebook.get_nth_page(self.__notebook.get_current_page())
+       if scrollbox is None:
+           return None
 
-        return scrollbox.get_children()[0].get_children()[0]
+       return scrollbox.get_children()[0].get_children()[0]
 

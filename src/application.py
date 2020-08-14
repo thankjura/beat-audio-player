@@ -22,8 +22,8 @@ from gi.repository import Gtk, Gio, GObject, GLib
 from gettext import gettext as _
 
 from beat.window import BeatWindow
-from beat.player import Player
 from beat.settings import Settings
+from beat.components.queue import PlayerQueue
 from beat.components.indicator import StatusIndicator
 
 
@@ -36,7 +36,7 @@ class Application(Gtk.Application):
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
 
         self.__window = None
-        self.__player = Player(self)
+        self.__queue = PlayerQueue(self)
 
         self.connect("command-line", self.__on_command_line)
         # command line
@@ -58,14 +58,14 @@ class Application(Gtk.Application):
                 playlist.add_tracks(f)
 
             if not options.contains("append"):
-                playlist.play()
+                self.__queue.play()
 
         return 0
 
-    @GObject.Property(type=Player, default=None,
+    @GObject.Property(type=PlayerQueue, default=None,
                       flags=GObject.ParamFlags.READABLE)
-    def player(self):
-        return self.__player
+    def queue(self):
+        return self.__queue
 
     @GObject.Property(type=BeatWindow, default=None,
                       flags=GObject.ParamFlags.READABLE)

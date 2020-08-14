@@ -129,7 +129,7 @@ class Settings:
             print(f"Playlist {playlist.props.label} saved")
 
     def __on_playlist_switch(self, _win, uuid):
-        self.__config.set_value("main", "selected", str(uuid))
+        self.__config.set_value("main", "selected", uuid)
         self.__save()
 
     def __on_playlist_renamed(self, _win, uuid, label):

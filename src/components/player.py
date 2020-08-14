@@ -144,6 +144,10 @@ class Player(GObject.GObject):
                                       Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
                                       duration / 100 * progress)
 
+    def unpause(self):
+        if self.props.state == Playback.PAUSED:
+            self.props.state = Playback.PLAYING
+
     def play(self, filepath: str) -> bool:
         if Path(filepath).exists():
             if self.__source.get_property("location") != filepath:

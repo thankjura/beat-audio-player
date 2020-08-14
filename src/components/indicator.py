@@ -14,7 +14,7 @@ class StatusIndicator:
         self.__indicator = AppIndicator3.Indicator.new(app.get_application_id(),
                                                        "beat", category)
         self.__indicator.set_status(status)
-        self.__app.props.player.connect("notify::state", self.__on_player_state)
+        self.__app.props.queue.props.player.connect("notify::state", self.__on_player_state)
 
         self.__play_label = _('Play')
         self.__pause_label = _('Pause')
@@ -44,14 +44,13 @@ class StatusIndicator:
             self.__item_play.set_label(self.__play_label)
 
     def __play(self, item):
-        self.__app.props.win.props.playlist.play()
+        self.__app.props.queue.play()
 
     def __next(self, item):
-        self.__app.props.win.props.playlist.play_next()
+        self.__app.props.queue.play_next()
 
     def __prev(self, item):
-        self.__app.props.win.props.playlist.play_prev()
+        self.__app.props.queue.play_prev()
 
     def __quit(self, item):
-        print("quit")
         self.__app.quit()
