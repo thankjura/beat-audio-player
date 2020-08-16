@@ -40,25 +40,33 @@ class Application(Gtk.Application):
 
         self.connect("command-line", self.__on_command_line)
         # command line
-        self.add_main_option("append", ord("a"), GLib.OptionFlags.NONE, GLib.OptionArg.NONE, _("Append to current playlist instead of create new"), None)
+        self.add_main_option("append", ord("a"), GLib.OptionFlags.NONE,
+                    GLib.OptionArg.NONE,
+                    _("Append to current playlist instead of create new"),
+                    None)
 
     def __on_command_line(self, _app, command_line):
         options = command_line.get_options_dict()
         self.activate()
 
         files = command_line.get_arguments()[1:]
-        if files:
-            playlist = None
-            if options.contains("append"):
-                playlist = self.__window.props.playlist
-            if not playlist:
-                playlist = self.__window.create_playlist_tab(_("new playlist"), selected=True)
+        if not files:
+            return 0
 
-            for f in files:
-                playlist.add_tracks(f)
+        playlist = self.__window.get_current_playlist()
 
-            if not options.contains("append"):
-                self.__queue.play()
+        is_append = options.contains("append")
+
+        if not playlist or (not is_append and playlist.is_saved()):
+            playlist = self.__window.create_playlist_tab(_("new playlist"), selected=True)
+
+        added_track_refs = []
+
+        for f in files:
+            added_track_refs.extend(playlist.add_tracks(f))
+
+        if not options.contains("append") and added_track_refs:
+            self.__queue.play_ref(added_track_refs[0])
 
         return 0
 
@@ -80,7 +88,7 @@ class Application(Gtk.Application):
                 StatusIndicator(self)
             except ImportError:
                 print("Appincicator3 not found")
-            if not self.__window.props.playlist:
+            if not self.__window.get_current_playlist():
                 self.__window.create_playlist_tab(_("new playlist"))
         self.__window.present()
 

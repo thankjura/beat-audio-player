@@ -5,7 +5,9 @@
     <file>ui/header.ui</file>
     <file>ui/footer.ui</file>
     <file>ui/progress.ui</file>
-    <file>icons/active_track.png</file>
+    <file>icons/active.svg</file>
+    <file>icons/play.svg</file>
+    <file>icons/pause.svg</file>
     <file>icons/beat.svg</file>
   </gresource>
 </gresources>

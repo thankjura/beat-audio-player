@@ -70,15 +70,14 @@ class BeatWindow(Gtk.ApplicationWindow):
     def __on_playlist_chaned(self, playlist):
         self.emit("playlist-changed", playlist)
 
-    def create_playlist_tab(self, label, rows=None, uuid=None, selected=False) -> PlayList:
-        playlist = PlayList(self.__app, label, uuid)
+    def create_playlist_tab(self, label, rows=None, uuid=None, selected=False, saved=False) -> PlayList:
+        playlist = PlayList(self.__app, label, uuid, saved=saved)
         playlist.connect("changed", self.__on_playlist_chaned)
         scrollbox = Gtk.ScrolledWindow()
         scrollbox.add_with_viewport(playlist)
         if rows:
-            cols = playlist.get_cols()
             for row in rows:
-                playlist.add_row([row.get(c) for c in cols])
+                playlist.add_row(row)
 
         tab = Tab(label)
         tab.connect("deleted", self.__on_delete_tab, playlist)
@@ -92,6 +91,7 @@ class BeatWindow(Gtk.ApplicationWindow):
         return playlist
 
     def __on_rename_tab(self, _tab, label, playlist):
+        playlist.set_saved(True)
         self.emit("tab-renamed", playlist.uuid, label)
 
     def __on_delete_tab(self, tab, playlist):
@@ -105,9 +105,7 @@ class BeatWindow(Gtk.ApplicationWindow):
         self.__toggle_show_tabs()
         self.emit("tab-removed", playlist.uuid)
 
-    @GObject.Property(type=PlayList, default=None,
-                     flags=GObject.ParamFlags.READABLE)
-    def playlist(self):
+    def get_current_playlist(self):
        scrollbox = self.__notebook.get_nth_page(self.__notebook.get_current_page())
        if scrollbox is None:
            return None

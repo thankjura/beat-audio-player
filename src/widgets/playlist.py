@@ -6,8 +6,9 @@ from gi.repository import Gtk, Gdk, GObject
 from uuid import uuid4
 
 from beat.widgets.cell_renderers import *
+from beat.widgets.store import PlayListStore, PLAYLIST_COLS
 from beat.utils.track_info import TrackInfo
-from beat.player import Playback
+from beat.components.queue import QueueState
 
 __all__ = ["PlayList"]
 
@@ -18,22 +19,6 @@ TARGETS = [
 ROW_ATOM = Gdk.Atom.intern_static_string("GTK_LIST_BOX_ROW")
 
 
-PLAYLIST_COLS = [
-    {"key": "src",      "label": "",           "type": str,  "cell_type": None},
-    {"key": "active",   "label": "",           "type": bool, "cell_type": CellRendererActiveTrack},
-    {"key": "artist",   "label": _("Artist"),  "type": str,  "cell_type": Gtk.CellRendererText},
-    {"key": "album",    "label": _("Album"),   "type": str,  "cell_type": Gtk.CellRendererText},
-    {"key": "title",    "label": _("Title"),   "type": str,  "cell_type": Gtk.CellRendererText},
-    {"key": "length",   "label": _("Length"),  "type": str,  "cell_type": Gtk.CellRendererText},
-]
-
-
-class PlayListStore(Gtk.ListStore):
-    __gtype_name__ = "PlayListStore"
-    def __init__(self):
-        super().__init__(*[col["type"] for col in PLAYLIST_COLS])
-
-
 class PlayList(Gtk.TreeView):
     __gtype_name__ = "PlayList"
 
@@ -42,14 +27,13 @@ class PlayList(Gtk.TreeView):
         "changed": (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
-
-    def __init__(self, app, label, uuid=None):
+    def __init__(self, app, label, uuid=None, saved=False):
         super().__init__()
         self.__app = app
         self.__label = label
         self.__uuid = uuid if uuid else str(uuid4())
         self.__selection = self.get_selection()
-        self.__active_iter = None
+        self.__saved = saved
 
         # property
         # self.props.enable_search = True
@@ -57,12 +41,11 @@ class PlayList(Gtk.TreeView):
 
         # store
         self.__store = PlayListStore()
-        self.__store.connect("row-changed", self.__save_playlist)
-        self.__store_delete_handler_id = self.__store.connect(
-                                    "row-deleted", self.__save_playlist)
         self.__store.connect("rows-reordered", self.__save_playlist)
 
+        # queue
         self.__queue = self.__app.props.queue
+        self.__queue.connect("notify::state", self.__on_queue_state)
 
         self.props.activate_on_single_click = False
         self.set_model(self.__store)
@@ -83,43 +66,59 @@ class PlayList(Gtk.TreeView):
         self.drag_source_add_text_targets()
 
         # make cols
+
         for col_index, col in enumerate(PLAYLIST_COLS):
             if not col.get("cell_type"):
                 continue
 
-
             renderer = col.get("cell_type")()
             if issubclass(col.get("cell_type"), Gtk.CellRendererText):
                 column = Gtk.TreeViewColumn(col["label"], renderer, text=col_index)
+            elif col.get("cell_type") == CellRendererActiveTrack:
+                column = Gtk.TreeViewColumn(col["label"], renderer)
+                column.set_min_width(24)
+                column.set_cell_data_func(renderer, self.__update_cell_active_track)
             else:
                 column = Gtk.TreeViewColumn(col["label"], renderer)
-                column.set_cell_data_func(renderer, self.__update_cell_active_track)
-            if col.get("cell_type") == CellRendererActiveTrack:
-                column.set_min_width(24)
+
             self.append_column(column)
 
         self.connect("drag_data_get", self.__on_data_get)
         self.connect("drag_data_received", self.__on_data_drop)
         self.connect("button_press_event", self.__on_button_press)
 
+    def __on_queue_state(self, queue, _state):
+        active_ref = queue.active_ref
+        if not active_ref:
+            self.__store.set_active_ref(None)
+            return
+
+        if self.__store.active_ref != active_ref:
+            self.__store.set_active_ref(None)
+
+        model = active_ref.get_model()
+        state = queue.state
+        if self.__store == model:
+            self.__store.set_active_ref(active_ref)
+            if state == QueueState.PLAYING:
+                self.__store.set_state_for_active_ref("play")
+            elif state == QueueState.PAUSED:
+                self.__store.set_state_for_active_ref("pause")
+            else:
+                self.__store.set_state_for_active_ref("stop")
+
     def __update_cell_active_track(self, _col, cell, model, tree_iter, _data):
-        is_active = model.get_value(tree_iter, 1)
-        cell.set_active(is_active)
+        ref = Gtk.TreeRowReference.new(self.__store, self.__store.get_path(tree_iter))
+        cell.set_state(self.__store.get_state_for_iter(tree_iter))
 
     def __on_row_delete(self, _view):
         model, paths = self.__selection.get_selected_rows()
-        with model.handler_block(self.__store_delete_handler_id):
-            selected_iters = set()
-            for p in paths:
-                tree_iter = model.get_iter(p)
-                if tree_iter:
-                    selected_iters.add(tree_iter)
+        selected_refs = set()
+        for p in paths:
+            ref = Gtk.TreeRowReference.new(model, p)
+            selected_refs.add(ref)
 
-            if self.__active_iter in selected_iters:
-                self.__select_next_iter(exclude=selected_iters)
-
-            for i in selected_iters:
-                model.remove(i)
+        self.__store.remove_refs(selected_refs)
         self.emit("changed")
 
     def __on_button_press(self, _widget, event):
@@ -134,17 +133,17 @@ class PlayList(Gtk.TreeView):
         self.emit("changed")
 
     def __on_row_activated(self, _view, path, _column):
-        tree_iter = self.__store.get_iter(path)
-        if tree_iter:
-            self.__set_active(tree_iter)
-            track = self.__store[tree_iter][0]
-            self.__active_row_id = self.__store[tree_iter][-1]
-            self.__queue.playlist_play(self, track)
+        ref = Gtk.TreeRowReference(self.__store, path)
+        self.__store.set_active_ref(ref)
+        self.__queue.play_ref(ref)
 
-    @staticmethod
-    def __on_data_get(view, context, selection_data, info, timestamp):
-        tree_selection = view.get_selection()
-        model, paths = tree_selection.get_selected_rows()
+    def play(self, ref):
+        self.__store.set_active_ref(ref)
+        if ref:
+            self.__queue.play_ref(ref)
+
+    def __on_data_get(self, view, context, selection_data, info, timestamp):
+        model, paths = self.__selection().get_selected_rows()
         iters = [model.get_iter(path) for path in paths]
         iter_str = ','.join([model.get_string_from_iter(it) for it in iters])
         selection_data.set(ROW_ATOM, 0, iter_str.encode())
@@ -192,95 +191,35 @@ class PlayList(Gtk.TreeView):
                 self.add_tracks(filepath, position_iter, insert_after)
             self.emit("changed")
 
-    def __set_active(self, tree_iter):
-        if self.__active_iter and self.__store[self.__active_iter]:
-            self.__store.set_value(self.__active_iter, 1, False)
-        self.__active_iter = tree_iter
-        if self.__active_iter and self.__store[self.__active_iter]:
-            self.__store.set_value(self.__active_iter, 1, True)
-
-    def __select_next_iter(self, exclude = None):
-        if not self.__active_iter:
-            return
-
-        next_iter = self.__store.iter_next(self.__active_iter)
-
-        if exclude and self.__active_iter is not None and self.__active_iter in exclude:
-            next_iter = self.__select_next_iter(self, exclude=exclude)
-
-        self.__set_active(next_iter)
-
-    def get_selected(self) -> list:
-        model, paths = self.__selection.get_selected_rows()
-        out = []
-        for p in paths:
-            tree_iter = self.__store.get_iter(p)
-            if tree_iter:
-                out.append(self.__store[tree_iter][0])
-
-        return out
-
-    def get_active(self) -> list:
-        if self.__active_iter:
-            return model[tree_iter][0]
-
-    def get_first_and_select(self) -> str:
-        tree_iter = self.__store.get_iter_first()
-        if tree_iter:
-            self.__set_active(tree_iter)
-            return self.__store[tree_iter][0]
-
-    def get_next_and_select(self):
-        if self.__active_iter:
-            next_iter = self.__store.iter_next(self.__active_iter)
-            if next_iter:
-                self.__set_active(next_iter)
-                return self.__store[next_iter][0]
-
-    def get_prev_and_select(self):
-        if self.__active_iter:
-            prev_iter = self.__store.iter_previous(self.__active_iter)
-            if prev_iter:
-                self.__set_active(prev_iter)
-                return self.__store[prev_iter][0]
-
     def add_row(self, row, position_iter=None, insert_after=True):
-        #if isinstance(row[1], str):
-            # row[1] = row[1] == "True"
-        row[1] = False
-        if position_iter:
-            if insert_after:
-                self.__store.insert_after(position_iter, row)
-            else:
-                self.__store.insert_before(position_iter, row)
-        else:
-            self.__store.append(row)
+        return self.__store.add_row(row, position_iter=None, insert_after=True)
 
-
-    def add_tracks(self, path: str, position_iter=None, insert_after=True) -> bool:
+    def add_tracks(self, path: str, position_iter=None, insert_after=True) -> list:
         path = Path(path)
+        out = []
         if not path.exists():
-            return False
+            return out
 
         if path.is_dir():
             for p in path.iterdir():
-                self.add_tracks(str(p), position_iter=None, insert_after=True)
-            return True
+                out.extend(self.add_tracks(str(p), position_iter=None, insert_after=True))
+            return out
 
         try:
             info = TrackInfo(path)
         except:
-            return False
+            return out
 
-        row = [str(path), False,
-               info.artist,
-               info.album,
-               info.title,
-               info.duration_str]
-        self.add_row(row, position_iter, insert_after)
+        row = {"src":   str(path),
+               "artist": info.artist,
+               "album":  info.album,
+               "title":  info.title,
+               "length": info.duration_str}
 
+        ref = self.add_row(row, position_iter, insert_after)
+        out.append(ref)
 
-        return True
+        return out
 
     def get_cols(self):
         return [k["key"] for k in PLAYLIST_COLS]
@@ -288,13 +227,11 @@ class PlayList(Gtk.TreeView):
     def get_rows(self):
         return [t[:] for t in self.__store]
 
-    @GObject.Property(type=str, default="playlist",
-                      flags=GObject.ParamFlags.READABLE)
+    @property
     def label(self):
         return self.__label
 
-    @GObject.Property(type=int, default=None,
-                      flags=GObject.ParamFlags.READABLE)
+    @property
     def index(self):
         viewport = self.get_parent()
         if not viewport:
@@ -308,3 +245,13 @@ class PlayList(Gtk.TreeView):
     @property
     def uuid(self):
         return self.__uuid
+
+    @property
+    def active_ref(self):
+        return self.__store.active_ref
+
+    def is_saved(self):
+        return self.__saved
+
+    def set_saved(self, saved):
+        self.__saved = saved

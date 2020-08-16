@@ -149,7 +149,7 @@ class Player(GObject.GObject):
             self.props.state = Playback.PLAYING
 
     def play(self, filepath: str) -> bool:
-        if Path(filepath).exists():
+        if filepath and Path(filepath).exists():
             if self.__source.get_property("location") != filepath:
                 self.props.state = Playback.STOPPED
                 self.__source.set_property("location", filepath)

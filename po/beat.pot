@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-14 01:53+0300\n"
+"POT-Creation-Date: 2020-08-17 02:29+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,11 +49,11 @@ msgstr ""
 msgid "label"
 msgstr ""
 
-#: src/application.py:43
+#: src/application.py:45
 msgid "Append to current playlist instead of create new"
 msgstr ""
 
-#: src/application.py:55 src/application.py:84
+#: src/application.py:61 src/application.py:92
 msgid "new playlist"
 msgstr ""
 
@@ -61,23 +61,23 @@ msgstr ""
 msgid "Rename"
 msgstr ""
 
-#: src/window/tab.py:24 src/widgets/playlist.py:72
+#: src/window/tab.py:24 src/widgets/playlist.py:55
 msgid "Delete"
 msgstr ""
 
-#: src/widgets/playlist.py:24
+#: src/widgets/store.py:11
 msgid "Artist"
 msgstr ""
 
-#: src/widgets/playlist.py:25
+#: src/widgets/store.py:12
 msgid "Album"
 msgstr ""
 
-#: src/widgets/playlist.py:26
+#: src/widgets/store.py:13
 msgid "Title"
 msgstr ""
 
-#: src/widgets/playlist.py:27
+#: src/widgets/store.py:14
 msgid "Length"
 msgstr ""
 

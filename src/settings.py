@@ -54,7 +54,8 @@ class Settings:
             self.__app.props.win.create_playlist_tab(label=p.get("label"),
                                                      rows=p.get("rows"),
                                                      uuid=p.get("uuid"),
-                                                     selected=p.get("selected"))
+                                                     selected=p.get("selected"),
+                                                     saved=True)
 
     def __save(self):
         with self.__config_file.open('w') as f:
@@ -114,8 +115,8 @@ class Settings:
         if not filename:
             filename = f"{uuid}.csv"
             self.__config.set_value(uuid, "file", filename)
-        self.__config.set_value(uuid, "label", playlist.props.label)
-        self.__config.set_value(uuid, "position", playlist.props.index)
+        self.__config.set_value(uuid, "label", playlist.label)
+        self.__config.set_value(uuid, "position", playlist.index)
         self.__save()
 
         cols = playlist.get_cols()
@@ -126,7 +127,7 @@ class Settings:
             for row in playlist.get_rows():
                 writer.writerow(row)
 
-            print(f"Playlist {playlist.props.label} saved")
+            print(f"Playlist {playlist.label} saved")
 
     def __on_playlist_switch(self, _win, uuid):
         self.__config.set_value("main", "selected", uuid)

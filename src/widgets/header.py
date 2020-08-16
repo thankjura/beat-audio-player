@@ -1,6 +1,7 @@
 from gi.repository import Gtk
 
 from beat.components.player import Playback
+from beat.components.queue import QueueState
 
 __all__ = ["HeaderBar"]
 
@@ -16,7 +17,7 @@ class HeaderBar(Gtk.HeaderBar):
         super().__init__()
         self.__app = app
         self.__queue = app.props.queue
-        self.__queue.props.player.connect("notify::state", self.__on_player_state)
+        self.__queue.connect("notify::state", self.__on_queue_state)
 
     def __open_files(self, keep_tab: bool):
         dialog = Gtk.FileChooserDialog(
@@ -76,9 +77,9 @@ class HeaderBar(Gtk.HeaderBar):
     def _on_volume_changed(self, _widget, value):
         self.__queue.props.player.set_volume(value)
 
-    def __on_player_state(self, player, state):
-        player_state = player.props.state
-        if player_state == Playback.PLAYING:
+    def __on_queue_state(self, queue, state):
+        queue_state = queue.props.state
+        if queue_state == QueueState.PLAYING:
            self.__button_play_img.set_from_icon_name("gtk-media-pause",
                                                       Gtk.IconSize.BUTTON)
         else:
