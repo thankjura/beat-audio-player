@@ -16,9 +16,7 @@ class Playback(IntEnum):
 class Player(GObject.GObject):
     __gsignals__ = {
         "clock-tick": (GObject.SignalFlags.RUN_FIRST, None, (int, )),
-        'eos': (GObject.SignalFlags.RUN_FIRST, None, ()),
-        "error": (GObject.SignalFlags.RUN_FIRST, None, ()),
-        "stream-start": (GObject.SignalFlags.RUN_FIRST, None, ())
+        "eos": (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
     def __init__(self, app):
@@ -73,7 +71,6 @@ class Player(GObject.GObject):
         def delayed_query():
             self.__query_duration()
             self.__tick = 0
-            self.emit("stream-start")
 
         GLib.timeout_add(1, delayed_query)
 
@@ -97,8 +94,7 @@ class Player(GObject.GObject):
     def __on_bus_error(self, bus, message):
         error, debug = message.parse_error()
         if error.matches(Gst.CoreError.quark(), Gst.CoreError.MISSING_PLUGIN):
-            self.props.state = Playback.PAUSED
-            print("error")
+            self.props.state = Playback.STOPPED
 
         self.emit("error")
         return True

@@ -98,7 +98,7 @@ class PlayListStore(Gtk.ListStore):
         else:
             ref = Gtk.TreeRowReference.new(self, self.get_path(tree_iter))
             if ref:
-                self.__store.set_active_ref(ref)
+                self.set_active_ref(ref)
                 return ref
 
     def get_next_and_select(self):

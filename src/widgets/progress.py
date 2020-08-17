@@ -57,6 +57,9 @@ class ProgressBar(Gtk.Box):
     def __on_player_clock_tick(self, player, val):
         duration = player.props.duration
         current = player.props.position
+        if not duration:
+            self.__current_position_label.set_text(TrackInfo.get_time_str(0))
+            return
         if duration > 0.0 and current >= 0.0:
             self.__set_progress(current / duration * 100)
             self.__current_position_label.set_text(TrackInfo.get_time_str(current))

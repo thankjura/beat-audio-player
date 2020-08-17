@@ -255,3 +255,6 @@ class PlayList(Gtk.TreeView):
 
     def set_saved(self, saved):
         self.__saved = saved
+
+    def get_first_and_select(self):
+        return self.__store.get_first_and_select()

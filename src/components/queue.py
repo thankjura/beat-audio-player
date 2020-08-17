@@ -20,7 +20,11 @@ class PlayerQueue(GObject.GObject):
         self.__queue = []
         self.__state = QueueState.STOPPED
         self.__player.connect("notify::state", self.__on_player_state)
+        self.__player.connect("eos", self.__on_player_eos)
         self.__active_ref = None
+
+    def __on_player_eos(self, player):
+        self.play_next()
 
     def __on_player_state(self, player, _state):
         player_state = player.props.state
@@ -30,6 +34,7 @@ class PlayerQueue(GObject.GObject):
             self.__state = QueueState.PAUSED
         else:
             self.__state = QueueState.STOPPED
+        #
         self.notify("state")
 
     @GObject.Property(type=int, flags=GObject.ParamFlags.READABLE)
