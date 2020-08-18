@@ -25,7 +25,7 @@ subdir('data')
 subdir('src')
 subdir('po')
 
-install_subdir('third_party/tinytag/tinytag', install_dir: moduledir)
+install_subdir('third_party/tinytag/tinytag', install_dir: moduledir, exclude_directories: ['tests'])
 
 conf = configuration_data()
 conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
