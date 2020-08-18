@@ -27,7 +27,15 @@ class Player(GObject.GObject):
         self.__source = Gst.ElementFactory.make("filesrc", "file-source")
         decodebin = Gst.ElementFactory.make('decodebin', 'decodebin')
         audioconvert = Gst.ElementFactory.make('audioconvert', 'audioconvert')
+
+        spectrum = Gst.ElementFactory.make("spectrum", "spectrum")
+        spectrum.set_property("bands", 64)
+        spectrum.set_property("threshold", -60)
+        spectrum.set_property("post-messages", True)
+        spectrum.set_property('message-magnitude', True)
+
         self.__volume = Gst.ElementFactory.make('volume', 'volume')
+
         sink = Gst.ElementFactory.make('autoaudiosink', 'autoaudiosink')
 
         def on_pad_added(_decodebin, pad):
@@ -35,9 +43,10 @@ class Player(GObject.GObject):
 
         decodebin.connect('pad-added', on_pad_added)
 
-        [self.__player.add(k) for k in [self.__source, decodebin, audioconvert, self.__volume, sink]]
+        [self.__player.add(k) for k in [self.__source, decodebin, audioconvert, spectrum, self.__volume, sink]]
         self.__source.link(decodebin)
-        audioconvert.link(self.__volume)
+        audioconvert.link_filtered(spectrum)
+        spectrum.link(self.__volume)
         self.__volume.link(sink)
 
         self.__bus = self.__player.get_bus()
@@ -50,6 +59,10 @@ class Player(GObject.GObject):
 
         self.__tick = 0
         self.__state = Playback.STOPPED
+
+    @property
+    def playbin(self):
+        return self.__player
 
     def __query_duration(self):
         success, duration = self.__player.query_duration(Gst.Format.TIME)
@@ -96,7 +109,6 @@ class Player(GObject.GObject):
         if error.matches(Gst.CoreError.quark(), Gst.CoreError.MISSING_PLUGIN):
             self.props.state = Playback.STOPPED
 
-        self.emit("error")
         return True
 
     def __on_bus_eos(self, bus, message):
