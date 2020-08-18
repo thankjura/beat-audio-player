@@ -2,7 +2,6 @@
 Name=Beat audio player
 Terminal=false
 Type=Application
-Encoding=UTF-8
 Categories=AudioVideo;Audio;Player;
 StartupNotify=true
 Icon=beat
