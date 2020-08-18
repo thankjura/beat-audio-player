@@ -3,7 +3,7 @@ import io
 from gi.repository import Gtk, GdkPixbuf, GLib
 from PIL import Image, ImageColor
 
-from beat.player import Playback
+from beat.components.player import Playback
 from beat.utils.track_info import TrackInfo
 from beat.widgets.spectrum import Spectrum
 

@@ -1,7 +1,7 @@
 from gi.repository import AppIndicator3, Gtk
 from gettext import gettext as _
 
-from ..player import Playback
+from ..components.player import Playback
 
 __all__ = ["StatusIndicator"]
 
