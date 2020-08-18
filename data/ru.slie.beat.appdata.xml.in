@@ -6,7 +6,9 @@
   <name>Beat</name>
   <summary>Lightweight audio player</summary>
 	<description>
+      <p>
 	    Simple audio player for gnome
+      </p>
 	</description>
   <url type="homepage">https://github.com/thankjura/beat-audio-player</url>
   <screenshots>
