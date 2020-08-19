@@ -138,7 +138,6 @@ class Player(GObject.GObject):
     def duration(self):
         if self.props.state == Playback.STOPPED:
             return -1
-
         return self.__duration
 
     @duration.setter

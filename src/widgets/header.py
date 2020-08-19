@@ -37,7 +37,7 @@ class HeaderBar(Gtk.HeaderBar):
             playlist = None
 
             if keep_tab:
-                playlist = self.__app.props.win.props.playlist
+                playlist = self.__app.props.win.get_current_playlist()
 
             if playlist is None:
                 playlist = self.__app.props.win.create_playlist_tab("playlist", selected=True)
