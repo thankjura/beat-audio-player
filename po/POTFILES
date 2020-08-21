@@ -12,11 +12,13 @@ src/settings.py
 src/widgets/header.py
 src/widgets/footer.py
 src/widgets/playlist.py
-src/widgets/store.py
 src/widgets/progress.py
 src/widgets/cell_renderers.py
+src/widgets/spectrum.py
 src/utils/track_info.py
 src/components/indicator.py
 src/components/player.py
 src/components/queue.py
+src/components/queue_manager.py
+src/components/store.py
 

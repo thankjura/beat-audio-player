@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-17 02:29+0300\n"
+"POT-Creation-Date: 2020-08-22 02:35+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,11 @@ msgstr ""
 msgid "Beat audio player"
 msgstr ""
 
-#: data/ru.slie.beat.desktop.in:16
+#: data/ru.slie.beat.desktop.in:15
 msgid "Open in Beat"
 msgstr ""
 
-#: data/ru.slie.beat.desktop.in:20
+#: data/ru.slie.beat.desktop.in:19
 msgid "Add to playlist(Beat)"
 msgstr ""
 
@@ -37,7 +37,7 @@ msgstr ""
 msgid "Lightweight audio player"
 msgstr ""
 
-#: data/ru.slie.beat.appdata.xml.in:8
+#: data/ru.slie.beat.appdata.xml.in:9
 msgid "Simple audio player for gnome"
 msgstr ""
 
@@ -61,24 +61,16 @@ msgstr ""
 msgid "Rename"
 msgstr ""
 
-#: src/window/tab.py:24 src/widgets/playlist.py:55
+#: src/window/tab.py:24 src/widgets/playlist.py:60
 msgid "Delete"
 msgstr ""
 
-#: src/widgets/store.py:11
-msgid "Artist"
+#: src/widgets/playlist.py:56
+msgid "Add to queue"
 msgstr ""
 
-#: src/widgets/store.py:12
-msgid "Album"
-msgstr ""
-
-#: src/widgets/store.py:13
-msgid "Title"
-msgstr ""
-
-#: src/widgets/store.py:14
-msgid "Length"
+#: src/widgets/playlist.py:58
+msgid "Remove from queue"
 msgstr ""
 
 #: src/utils/track_info.py:20
@@ -111,4 +103,20 @@ msgstr ""
 
 #: src/components/indicator.py:26
 msgid "Quit"
+msgstr ""
+
+#: src/components/store.py:12
+msgid "Artist"
+msgstr ""
+
+#: src/components/store.py:13
+msgid "Album"
+msgstr ""
+
+#: src/components/store.py:14
+msgid "Title"
+msgstr ""
+
+#: src/components/store.py:15
+msgid "Length"
 msgstr ""
