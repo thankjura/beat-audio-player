@@ -1,7 +1,7 @@
 from gi.repository import Gtk
 
 from beat.components.player import Playback
-from beat.components.queue import QueueState
+from beat.components.queue_manager import QueueState
 
 __all__ = ["HeaderBar"]
 

@@ -80,7 +80,6 @@ class Spectrum(Gtk.DrawingArea):
         b_width = w / (len(data) + 1)
 
         cr.push_group()
-
         cr.set_source_rgb(*self.LINE_COLOR)
         cr.set_line_width(self.LINE_SIZE)
 

@@ -1,14 +1,15 @@
 from pathlib import Path
 from urllib.parse import unquote
+from itertools import compress
 
 from gettext import gettext as _
 from gi.repository import Gtk, Gdk, GObject
 from uuid import uuid4
 
 from beat.widgets.cell_renderers import *
-from beat.widgets.store import PlayListStore, PLAYLIST_COLS
+from beat.components.store import PlayListStore, PLAYLIST_COLS
 from beat.utils.track_info import TrackInfo
-from beat.components.queue import QueueState
+from beat.components.queue_manager import QueueState
 
 __all__ = ["PlayList"]
 
@@ -52,8 +53,14 @@ class PlayList(Gtk.TreeView):
 
         # right click menu
         self.__menu = Gtk.Menu()
+        menu_add_to_queue_item = Gtk.MenuItem(_("Add to queue"))
+        menu_add_to_queue_item.connect("activate", self.__on_add_to_queue)
+        self.__menu_remove_from_queue_item = Gtk.MenuItem(_("Remove from queue"))
+        self.__menu_remove_from_queue_item.connect("activate", self.__on_remove_from_queue)
         menu_delete_item = Gtk.MenuItem(_("Delete"))
         menu_delete_item.connect("activate", self.__on_row_delete)
+        self.__menu.add(menu_add_to_queue_item)
+        self.__menu.add(self.__menu_remove_from_queue_item)
         self.__menu.add(menu_delete_item)
         self.__menu.show_all()
 
@@ -111,21 +118,52 @@ class PlayList(Gtk.TreeView):
         ref = Gtk.TreeRowReference.new(self.__store, self.__store.get_path(tree_iter))
         cell.set_state(self.__store.get_state_for_iter(tree_iter))
 
-    def __on_row_delete(self, _view):
+    def __get_selected_refs(self):
         model, paths = self.__selection.get_selected_rows()
         selected_refs = set()
         for p in paths:
             ref = Gtk.TreeRowReference.new(model, p)
             selected_refs.add(ref)
 
+        return selected_refs
+
+    def __on_row_delete(self, _view):
+        selected_refs = self.__get_selected_refs()
         self.__store.remove_refs(selected_refs)
+        self.__queue.remove(selected_refs)
         self.emit("changed")
+
+    def __on_add_to_queue(self, _view):
+        selected_refs = self.__get_selected_refs()
+        self.__queue.add(selected_refs)
+
+    def __on_remove_from_queue(self, _view):
+        selected_refs = self.__get_selected_refs()
+        self.__queue.remove(selected_refs)
 
     def __on_button_press(self, _widget, event):
         if event.type != Gdk.EventType.BUTTON_PRESS:
             return
         if event.get_button().button != 3:
             return
+        data = self.get_path_at_pos(event.x, event.y)
+        if data:
+            path = data[0]
+            if not self.__selection.path_is_selected(path):
+                self.__selection.unselect_all()
+                self.__selection.select_path(path)
+
+        selected_refs = self.__get_selected_refs()
+        has_position_ref = False
+        for ref in selected_refs:
+            if self.__store.get_position_for_ref(ref):
+                has_position_ref = True
+                break
+        if has_position_ref:
+            self.__menu_remove_from_queue_item.show()
+        else:
+            self.__menu_remove_from_queue_item.hide()
+
         self.__menu.popup(None, None, None, None, 0, Gtk.get_current_event_time())
         return True
 
@@ -192,7 +230,8 @@ class PlayList(Gtk.TreeView):
             self.emit("changed")
 
     def add_row(self, row, position_iter=None, insert_after=True):
-        return self.__store.add_row(row, position_iter=None, insert_after=True)
+        ref = self.__store.add_row(row, position_iter=None, insert_after=True)
+        return ref
 
     def add_tracks(self, path: str, position_iter=None, insert_after=True) -> list:
         path = Path(path)
@@ -222,10 +261,11 @@ class PlayList(Gtk.TreeView):
         return out
 
     def get_cols(self):
-        return [k["key"] for k in PLAYLIST_COLS]
+        return [k["key"] for k in PLAYLIST_COLS if not k["key"].startswith("_")]
 
     def get_rows(self):
-        return [t[:] for t in self.__store]
+        mask = [not k["key"].startswith("_") for k in PLAYLIST_COLS]
+        return [compress(t, mask) for t in self.__store]
 
     @property
     def label(self):

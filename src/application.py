@@ -23,7 +23,7 @@ from gettext import gettext as _
 
 from beat.window import BeatWindow
 from beat.settings import Settings
-from beat.components.queue import PlayerQueue
+from beat.components.queue_manager import QueueManager
 from beat.components.indicator import StatusIndicator
 
 
@@ -36,7 +36,7 @@ class Application(Gtk.Application):
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
 
         self.__window = None
-        self.__queue = PlayerQueue(self)
+        self.__queue = QueueManager(self)
 
         self.connect("command-line", self.__on_command_line)
         # command line
@@ -70,7 +70,7 @@ class Application(Gtk.Application):
 
         return 0
 
-    @GObject.Property(type=PlayerQueue, default=None,
+    @GObject.Property(type=QueueManager, default=None,
                       flags=GObject.ParamFlags.READABLE)
     def queue(self):
         return self.__queue

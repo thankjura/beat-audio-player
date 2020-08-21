@@ -5,14 +5,27 @@ from beat.widgets.cell_renderers import CellRendererActiveTrack
 
 __all__ = ["PlayListStore", "PLAYLIST_COLS"]
 
+
 PLAYLIST_COLS = [
     {"key": "src",      "label": "",           "type": str,  "cell_type": None},
-    {"key": "state",    "label": "",           "type": str,  "cell_type": CellRendererActiveTrack},
+    {"key": "_state",   "label": "",           "type": str,  "cell_type": CellRendererActiveTrack},
     {"key": "artist",   "label": _("Artist"),  "type": str,  "cell_type": Gtk.CellRendererText},
     {"key": "album",    "label": _("Album"),   "type": str,  "cell_type": Gtk.CellRendererText},
     {"key": "title",    "label": _("Title"),   "type": str,  "cell_type": Gtk.CellRendererText},
     {"key": "length",   "label": _("Length"),  "type": str,  "cell_type": Gtk.CellRendererText},
+    {"key": "_queue",   "label": "",           "type": str,  "cell_type": Gtk.CellRendererText},
 ]
+
+
+def __get_col_id(key):
+    for i, v in enumerate(PLAYLIST_COLS):
+        if key == v.get("key"):
+            return i
+
+
+SRC_ID = __get_col_id("src")
+STATE_ID = __get_col_id("_state")
+QUEUE_ID = __get_col_id("_queue")
 
 
 class PlayListStore(Gtk.ListStore):
@@ -65,14 +78,24 @@ class PlayListStore(Gtk.ListStore):
 
         return Gtk.TreeRowReference.new(self, self.get_path(prev_iter))
 
+    def get_position_for_ref(self, ref):
+        tree_iter = self.get_iter(ref.get_path())
+        return self.get_value(tree_iter, QUEUE_ID)
+
+    def update_position_for_ref(self, ref, position):
+        tree_iter = self.get_iter(ref.get_path())
+        if position is not None:
+            self.set_value(tree_iter, QUEUE_ID, position)
+        else:
+            self.set_value(tree_iter, QUEUE_ID, None)
+
     def get_track_path_for_ref(self, ref):
         tree_iter = self.__get_iter_for_ref(ref)
         if tree_iter:
-            return self.get_value(tree_iter, 0)
+            return self.get_value(tree_iter, SRC_ID)
 
     def add_row(self, row: dict, position_iter=None, insert_after=True):
         row = [row.get(c.get("key")) for c in PLAYLIST_COLS]
-        row[1] = None
         if position_iter:
             if insert_after:
                 tree_iter = self.insert_after(position_iter, row)
@@ -86,10 +109,10 @@ class PlayListStore(Gtk.ListStore):
     def set_state_for_active_ref(self, value):
         tree_iter = self.__get_iter_for_ref(self.__active_ref)
         if tree_iter:
-            self.set_value(tree_iter, 1, value)
+            self.set_value(tree_iter, STATE_ID, value)
 
     def get_state_for_iter(self, tree_iter):
-        return self.get_value(tree_iter, 1)
+        return self.get_value(tree_iter, STATE_ID)
 
     def get_first_and_select(self) -> str:
         tree_iter = self.get_iter_first()
