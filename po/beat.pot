@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-22 02:35+0300\n"
+"POT-Creation-Date: 2020-08-23 17:05+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,12 +21,24 @@ msgstr ""
 msgid "Beat audio player"
 msgstr ""
 
-#: data/ru.slie.beat.desktop.in:15
-msgid "Open in Beat"
+#: data/ru.slie.beat.desktop.in:15 src/components/indicator.py:20
+msgid "Play"
 msgstr ""
 
-#: data/ru.slie.beat.desktop.in:19
-msgid "Add to playlist(Beat)"
+#: data/ru.slie.beat.desktop.in:19 src/components/indicator.py:21
+msgid "Pause"
+msgstr ""
+
+#: data/ru.slie.beat.desktop.in:23
+msgid "Stop"
+msgstr ""
+
+#: data/ru.slie.beat.desktop.in:27 src/components/indicator.py:25
+msgid "Next"
+msgstr ""
+
+#: data/ru.slie.beat.desktop.in:31 src/components/indicator.py:26
+msgid "Prev"
 msgstr ""
 
 #: data/ru.slie.beat.appdata.xml.in:6
@@ -53,7 +65,11 @@ msgstr ""
 msgid "Append to current playlist instead of create new"
 msgstr ""
 
-#: src/application.py:61 src/application.py:92
+#: src/application.py:50
+msgid "available actions: play, pause, stop, next, prev"
+msgstr ""
+
+#: src/application.py:83 src/application.py:114
 msgid "new playlist"
 msgstr ""
 
@@ -85,23 +101,11 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: src/components/indicator.py:19
-msgid "Play"
+#: src/components/indicator.py:27
+msgid "Show"
 msgstr ""
 
-#: src/components/indicator.py:20
-msgid "Pause"
-msgstr ""
-
-#: src/components/indicator.py:24
-msgid "Next"
-msgstr ""
-
-#: src/components/indicator.py:25
-msgid "Prev"
-msgstr ""
-
-#: src/components/indicator.py:26
+#: src/components/indicator.py:28
 msgid "Quit"
 msgstr ""
 

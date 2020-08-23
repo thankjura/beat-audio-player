@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beat-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-22 02:35+0300\n"
-"PO-Revision-Date: 2020-08-22 02:36+0300\n"
+"POT-Creation-Date: 2020-08-23 17:05+0300\n"
+"PO-Revision-Date: 2020-08-23 17:06+0300\n"
 "Last-Translator: thankjura <me@slie.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -27,13 +27,25 @@ msgstr ""
 msgid "Beat audio player"
 msgstr "Beat аудио плеер"
 
-#: data/ru.slie.beat.desktop.in:15
-msgid "Open in Beat"
-msgstr "Открыть в Beat"
+#: data/ru.slie.beat.desktop.in:15 src/components/indicator.py:20
+msgid "Play"
+msgstr "Играть"
 
-#: data/ru.slie.beat.desktop.in:19
-msgid "Add to playlist(Beat)"
-msgstr "Добавить в плейлист(Beat)"
+#: data/ru.slie.beat.desktop.in:19 src/components/indicator.py:21
+msgid "Pause"
+msgstr "Пауза"
+
+#: data/ru.slie.beat.desktop.in:23
+msgid "Stop"
+msgstr "Стоп"
+
+#: data/ru.slie.beat.desktop.in:27 src/components/indicator.py:25
+msgid "Next"
+msgstr "Следующий"
+
+#: data/ru.slie.beat.desktop.in:31 src/components/indicator.py:26
+msgid "Prev"
+msgstr "Предыдущий"
 
 #: data/ru.slie.beat.appdata.xml.in:6
 msgid "Beat"
@@ -59,7 +71,11 @@ msgstr ""
 msgid "Append to current playlist instead of create new"
 msgstr "Добавить в текущий плейлист, а не создавать новый"
 
-#: src/application.py:61 src/application.py:92
+#: src/application.py:50
+msgid "available actions: play, pause, stop, next, prev"
+msgstr "доступные значения: play, pause, stop, next, prev"
+
+#: src/application.py:83 src/application.py:114
 msgid "new playlist"
 msgstr "новый плейлист"
 
@@ -91,23 +107,11 @@ msgstr "неизвестный артист"
 msgid "unknown"
 msgstr "неизвестно"
 
-#: src/components/indicator.py:19
-msgid "Play"
-msgstr "Играть"
+#: src/components/indicator.py:27
+msgid "Show"
+msgstr "Показать"
 
-#: src/components/indicator.py:20
-msgid "Pause"
-msgstr "Пауза"
-
-#: src/components/indicator.py:24
-msgid "Next"
-msgstr "Следующий"
-
-#: src/components/indicator.py:25
-msgid "Prev"
-msgstr "Предыдущий"
-
-#: src/components/indicator.py:26
+#: src/components/indicator.py:28
 msgid "Quit"
 msgstr "Выход"
 
@@ -126,3 +130,9 @@ msgstr "Название"
 #: src/components/store.py:15
 msgid "Length"
 msgstr "Продолжительность"
+
+#~ msgid "Open in Beat"
+#~ msgstr "Открыть в Beat"
+
+#~ msgid "Add to playlist(Beat)"
+#~ msgstr "Добавить в плейлист(Beat)"
