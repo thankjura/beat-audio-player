@@ -62,6 +62,10 @@ class QueueManager(GObject.GObject):
         self.__queue.remove(ref)
         self.__player.play(ref.get_model().get_track_path_for_ref(ref))
 
+    def pause(self):
+        if self.__player.props.state == Playback.PLAYING:
+            self.__player.pause()
+
     def play(self, ref=None):
         if self.__player.props.state == Playback.PLAYING:
             self.__player.pause()

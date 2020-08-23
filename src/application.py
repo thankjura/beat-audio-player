@@ -45,9 +45,31 @@ class Application(Gtk.Application):
                     _("Append to current playlist instead of create new"),
                     None)
 
+        self.add_main_option("action", ord("e"), GLib.OptionFlags.NONE,
+                    GLib.OptionArg.STRING,
+                    _("available actions: play, pause, stop, next, prev"),
+                    None)
+
     def __on_command_line(self, _app, command_line):
-        options = command_line.get_options_dict()
-        self.activate()
+        options = command_line.get_options_dict().end().unpack()
+        if not self.__window:
+            self.activate()
+
+        if "action" in options:
+            action = options['action']
+            if action == "play":
+                self.__queue.play()
+            elif action == "pause":
+                self.__queue.pause()
+            elif action == "pause":
+                self.__queue.pause()
+            elif action == "stop":
+                self.__queue.stop()
+            elif action == "next":
+                self.__queue.play_next()
+            elif action == "prev":
+                self.__queue.play_prev()
+            return 0
 
         files = command_line.get_arguments()[1:]
         if not files:
@@ -55,7 +77,7 @@ class Application(Gtk.Application):
 
         playlist = self.__window.get_current_playlist()
 
-        is_append = options.contains("append")
+        is_append = "append" in options
 
         if not playlist or (not is_append and playlist.is_saved()):
             playlist = self.__window.create_playlist_tab(_("new playlist"), selected=True)
