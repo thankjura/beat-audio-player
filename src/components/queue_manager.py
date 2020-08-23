@@ -59,7 +59,6 @@ class QueueManager(GObject.GObject):
     def play_ref(self, ref):
         self.__active_ref = ref
         track = ref.get_model().get_track_path_for_ref(ref)
-        print("start remove")
         self.__queue.remove(ref)
         self.__player.play(ref.get_model().get_track_path_for_ref(ref))
 
