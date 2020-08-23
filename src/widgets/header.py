@@ -19,6 +19,10 @@ class HeaderBar(Gtk.HeaderBar):
         self.__queue = app.props.queue
         self.__queue.connect("notify::state", self.__on_queue_state)
 
+    @property
+    def button_volume(self):
+        return self.__button_volume
+
     def __open_files(self, keep_tab: bool):
         dialog = Gtk.FileChooserDialog(
             title="Please choose a file", parent=self.__app.props.win, action=Gtk.FileChooserAction.OPEN

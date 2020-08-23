@@ -47,15 +47,19 @@ class BeatWindow(Gtk.ApplicationWindow):
         super().__init__(application=app, **kwargs)
 
         self.__app = app
-        header = HeaderBar(self.__app)
+        self.__header = HeaderBar(self.__app)
         progress = ProgressBar(self.__app)
         footer = StatusBar(self.__app)
-        self.set_titlebar(header)
+        self.set_titlebar(self.__header)
 
         self.__body.pack_start(progress, False, False, 0)
         self.__body.pack_end(footer, False, False, 0)
         self.__body.reorder_child(progress, 0)
         self.__notebook.connect("switch-page", self.__on_switch_tab)
+
+    @property
+    def header(self):
+        return self.__header
 
     def __on_switch_tab(self, _notebook, page, index):
         playlist = page.get_children()[0].get_children()[0]
