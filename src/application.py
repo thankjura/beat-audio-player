@@ -119,8 +119,8 @@ class Application(Gtk.Application):
         self.__window.present()
 
     def up(self):
-        self.__win.show()
-        self.__win.present()
-        self.__win.set_keep_above(True)
-        self.__win.set_keep_above(False)
+        self.__window.show()
+        self.__window.present()
+        self.__window.set_keep_above(True)
+        self.__window.set_keep_above(False)
 
