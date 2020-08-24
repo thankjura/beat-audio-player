@@ -61,10 +61,7 @@ class StatusIndicator:
         self.__app.props.queue.play_prev()
 
     def __show(self, menu, *args):
-        self.__app.props.win.show()
-        self.__app.props.win.present()
-        self.__app.props.win.set_keep_above(True)
-        self.__app.props.win.set_keep_above(False)
+        self.__app.up()
 
     def __quit(self, item):
         self.__app.quit()

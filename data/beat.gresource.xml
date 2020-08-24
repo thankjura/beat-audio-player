@@ -10,5 +10,6 @@
     <file>icons/pause.svg</file>
     <file>icons/beat.svg</file>
     <file>icons/album.svg</file>
+    <file>mpris2.xml</file>
   </gresource>
 </gresources>

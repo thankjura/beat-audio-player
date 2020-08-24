@@ -1,10 +1,9 @@
 import io
 
 from gi.repository import Gtk, GdkPixbuf, GLib
-from PIL import Image, ImageColor
 
 from beat.components.player import Playback
-from beat.utils.track_info import TrackInfo
+from beat.utils.art_info import ArtInfo
 from beat.widgets.spectrum import Spectrum
 
 
@@ -39,24 +38,13 @@ class StatusBar(Gtk.Box):
             return
 
         self.__track_path = track_path
-        track_info = TrackInfo(track_path, image=True)
-        image_bytes = track_info.get_image()
-        if not image_bytes:
+
+        image_path = ArtInfo(track_path).get_image_path()
+        if not image_path:
             self.__cover_image.props.pixbuf = self.__generic_cover
             return
 
-        pil_image = Image.open(io.BytesIO(image_bytes))
-        w, h = pil_image.size
-        bytes = GLib.Bytes.new(pil_image.tobytes())
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(image_path, 32, 32, True)
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_bytes(bytes,
-                                                 GdkPixbuf.Colorspace.RGB,
-                                                 False,
-                                                 8,
-                                                 w,
-                                                 h,
-                                                 w*3)
-
-        pixbuf = pixbuf.scale_simple(32, 32, GdkPixbuf.InterpType.BILINEAR)
         self.__cover_image.props.pixbuf = pixbuf
             

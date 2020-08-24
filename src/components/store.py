@@ -26,14 +26,18 @@ def __get_col_id(key):
 SRC_ID = __get_col_id("src")
 STATE_ID = __get_col_id("_state")
 QUEUE_ID = __get_col_id("_queue")
+ARTIST_ID = __get_col_id("artist")
+ALBUM_ID = __get_col_id("album")
+TITLE_ID = __get_col_id("title")
 
 
 class PlayListStore(Gtk.ListStore):
     __gtype_name__ = "PlayListStore"
 
-    def __init__(self):
+    def __init__(self, uuid):
         super().__init__(*[col["type"] for col in PLAYLIST_COLS])
         self.__active_ref = None
+        self.__uuid = uuid
 
     def __get_iter_for_ref(self, ref):
         if not ref:
@@ -94,6 +98,21 @@ class PlayListStore(Gtk.ListStore):
         if tree_iter:
             return self.get_value(tree_iter, SRC_ID)
 
+    def get_artist_for_ref(self, ref):
+        tree_iter = self.__get_iter_for_ref(ref)
+        if tree_iter:
+            return self.get_value(tree_iter, ARTIST_ID)
+
+    def get_album_for_ref(self, ref):
+        tree_iter = self.__get_iter_for_ref(ref)
+        if tree_iter:
+            return self.get_value(tree_iter, ALBUM_ID)
+
+    def get_title_for_ref(self, ref):
+        tree_iter = self.__get_iter_for_ref(ref)
+        if tree_iter:
+            return self.get_value(tree_iter, TITLE_ID)
+
     def add_row(self, row: dict, position_iter=None, insert_after=True):
         row = [row.get(c.get("key")) for c in PLAYLIST_COLS]
         if position_iter:
@@ -137,3 +156,7 @@ class PlayListStore(Gtk.ListStore):
             if prev_ref:
                 self.set_active_ref(prev_ref)
                 return prev_ref
+
+    @property
+    def uuid(self):
+        return uuid

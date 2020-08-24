@@ -25,6 +25,7 @@ from beat.window import BeatWindow
 from beat.settings import Settings
 from beat.components.queue_manager import QueueManager
 from beat.components.indicator import StatusIndicator
+from beat.components.mpris2 import MPRIS2
 
 
 __all__ = ["Application"]
@@ -110,7 +111,16 @@ class Application(Gtk.Application):
                 StatusIndicator(self)
             except ImportError:
                 print("Appincicator3 not found")
+
+            MPRIS2(self)
+
             if not self.__window.get_current_playlist():
                 self.__window.create_playlist_tab(_("new playlist"))
         self.__window.present()
+
+    def up(self):
+        self.__win.show()
+        self.__win.present()
+        self.__win.set_keep_above(True)
+        self.__win.set_keep_above(False)
 

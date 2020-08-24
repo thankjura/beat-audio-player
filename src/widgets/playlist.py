@@ -41,7 +41,7 @@ class PlayList(Gtk.TreeView):
         self.__selection.set_mode(Gtk.SelectionMode.MULTIPLE)
 
         # store
-        self.__store = PlayListStore()
+        self.__store = PlayListStore(self.__uuid)
         self.__store.connect("rows-reordered", self.__save_playlist)
 
         # queue

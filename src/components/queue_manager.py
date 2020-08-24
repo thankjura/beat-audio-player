@@ -15,6 +15,10 @@ class QueueState(IntEnum):
 
 class QueueManager(GObject.GObject):
 
+    __gsignals__ = {
+        "song-changed": (GObject.SignalFlags.RUN_FIRST, None, ())
+    }
+
     def __init__(self, app):
         super().__init__()
         self.__app = app
@@ -58,6 +62,7 @@ class QueueManager(GObject.GObject):
 
     def play_ref(self, ref):
         self.__active_ref = ref
+        self.emit("song-changed")
         track = ref.get_model().get_track_path_for_ref(ref)
         self.__queue.remove(ref)
         self.__player.play(ref.get_model().get_track_path_for_ref(ref))
@@ -108,5 +113,32 @@ class QueueManager(GObject.GObject):
                 self.play_ref(ref)
 
     @property
+    def has_next(self):
+        if not self.__active_ref:
+            return False
+
+        model = self.__active_ref.get_model()
+
+        return model.get_next_ref(self.__active_ref) != None
+
+    @property
+    def has_prev(self):
+        if not self.__active_ref:
+            return False
+
+        model = self.__active_ref.get_model()
+
+        return model.get_prev_ref(self.__active_ref) != None
+
+    @property
     def active_ref(self):
         return self.__active_ref
+
+    @property
+    def active_track_path(self):
+        if not self.__active_ref:
+            return None
+
+        model = self.__active_ref.get_model()
+        return model.get_track_path_for_ref(self.__active_ref)
+
