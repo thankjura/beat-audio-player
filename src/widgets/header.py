@@ -84,8 +84,8 @@ class HeaderBar(Gtk.HeaderBar):
     def __on_queue_state(self, queue, state):
         queue_state = queue.props.state
         if queue_state == QueueState.PLAYING:
-           self.__button_play_img.set_from_icon_name("gtk-media-pause",
+           self.__button_play_img.set_from_icon_name("media-playback-pause-symbolic.symbolic",
                                                       Gtk.IconSize.BUTTON)
         else:
-           self.__button_play_img.set_from_icon_name("gtk-media-play",
+           self.__button_play_img.set_from_icon_name("media-playback-start-symbolic.symbolic",
                                                       Gtk.IconSize.BUTTON)
