@@ -225,6 +225,8 @@ class PlayList(Gtk.TreeView):
         else:
             paths = data.decode().split("\n")
             for p in paths:
+                if not p:
+                    continue
                 filepath = unquote(p.strip().replace("file://", "", 1))
                 self.add_tracks(filepath, position_iter, insert_after)
             self.emit("changed")
