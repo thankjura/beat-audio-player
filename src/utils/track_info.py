@@ -1,3 +1,5 @@
+import re
+from pathlib import Path
 from gettext import gettext as _
 
 from beat.tinytag import TinyTag
@@ -8,7 +10,10 @@ __all__ = ["TrackInfo"]
 
 class TrackInfo:
     def __init__(self, url, image=False):
+        self.__url = url
         self.__tag = TinyTag.get(url, image=image)
+        keywords = ["album", "cover", self.album.lower(), self.artist.lower()]
+        self.__cover_pattern = re.compile(".*(" + "|".join(keywords) + ").*\.(jpg|jpeg|png)")
 
     def is_valid(self):
         return self.__tag is not None
@@ -43,7 +48,23 @@ class TrackInfo:
         return self.get_time_str(self.__tag.duration)
 
     def get_image(self):
-        return self.__tag.get_image()
+        image_data = self.__tag.get_image()
+        if image_data:
+            return image_data
+        else:
+            filepath = None
+            for f in Path(self.__url).parent.iterdir():
+                if f.is_dir():
+                    continue
+
+                if self.__cover_pattern.match(f.name.lower()):
+                    filepath = f
+                    break
+
+            if filepath:
+                return filepath.read_bytes()
+
+
 
     @staticmethod
     def get_time_str(seconds) -> str:
