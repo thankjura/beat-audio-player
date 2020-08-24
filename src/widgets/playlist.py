@@ -232,7 +232,7 @@ class PlayList(Gtk.TreeView):
             self.emit("changed")
 
     def add_row(self, row, position_iter=None, insert_after=True):
-        ref = self.__store.add_row(row, position_iter=None, insert_after=True)
+        ref = self.__store.add_row(row, position_iter=position_iter, insert_after=insert_after)
         return ref
 
     def add_tracks(self, path: str, position_iter=None, insert_after=True) -> list:
@@ -243,7 +243,7 @@ class PlayList(Gtk.TreeView):
 
         if path.is_dir():
             for p in path.iterdir():
-                out.extend(self.add_tracks(str(p), position_iter=None, insert_after=True))
+                out.extend(self.add_tracks(str(p), position_iter=position_iter, insert_after=insert_after))
             return out
 
         try:
