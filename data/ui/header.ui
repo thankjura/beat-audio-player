@@ -6,7 +6,7 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="vexpand">True</property>
-    <property name="title" translatable="yes">beat</property>
+    <property name="title" translatable="yes">Beat</property>
     <property name="show_close_button">True</property>
     <child>
       <object class="GtkButton" id="_button_open_files">

@@ -26,6 +26,7 @@ from beat.settings import Settings
 from beat.components.queue_manager import QueueManager
 from beat.components.indicator import StatusIndicator
 from beat.components.mpris2 import MPRIS2
+from beat.components.media_keys import MediaKeys
 
 
 __all__ = ["Application"]
@@ -50,6 +51,7 @@ class Application(Gtk.Application):
                     GLib.OptionArg.STRING,
                     _("available actions: play, pause, stop, next, prev"),
                     None)
+
 
     def __on_command_line(self, _app, command_line):
         options = command_line.get_options_dict().end().unpack()
@@ -113,7 +115,7 @@ class Application(Gtk.Application):
                 print("Appincicator3 not found")
 
             MPRIS2(self)
-
+            MediaKeys(self)
             if not self.__window.get_current_playlist():
                 self.__window.create_playlist_tab(_("new playlist"))
         self.__window.present()

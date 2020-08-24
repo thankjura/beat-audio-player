@@ -98,7 +98,7 @@ class MPRIS2(DBusInterface):
                 'Fullscreen': GLib.Variant('b', False),
                 'CanRaise': GLib.Variant('b', True),
                 'HasTrackList': GLib.Variant('b', True),
-                'Identity': GLib.Variant('s', 'Music'),
+                'Identity': GLib.Variant('s', 'Beat'),
                 'DesktopEntry': GLib.Variant('s', application_id),
                 'SupportedUriSchemes': GLib.Variant('as', [
                     'file'

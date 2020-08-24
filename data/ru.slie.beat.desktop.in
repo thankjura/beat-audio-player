@@ -1,5 +1,6 @@
 [Desktop Entry]
-Name=Beat audio player
+Name=Beat
+GenericName=Audio Player
 Terminal=false
 Type=Application
 Categories=AudioVideo;Audio;Player;

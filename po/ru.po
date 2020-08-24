@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beat-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-23 17:05+0300\n"
-"PO-Revision-Date: 2020-08-23 17:06+0300\n"
+"POT-Creation-Date: 2020-08-25 02:06+0300\n"
+"PO-Revision-Date: 2020-08-25 02:07+0300\n"
 "Last-Translator: thankjura <me@slie.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -23,33 +23,34 @@ msgstr ""
 "X-Poedit-SearchPath-0: src\n"
 "X-Poedit-SearchPath-1: data\n"
 
-#: data/ru.slie.beat.desktop.in:3
-msgid "Beat audio player"
-msgstr "Beat аудио плеер"
+#: data/ru.slie.beat.desktop.in:3 data/ru.slie.beat.appdata.xml.in:6
+#: data/ui/header.ui:9
+msgid "Beat"
+msgstr "Beat"
 
-#: data/ru.slie.beat.desktop.in:15 src/components/indicator.py:20
+#: data/ru.slie.beat.desktop.in:4
+msgid "Audio Player"
+msgstr "Аудио плеер"
+
+#: data/ru.slie.beat.desktop.in:16 src/components/indicator.py:20
 msgid "Play"
 msgstr "Играть"
 
-#: data/ru.slie.beat.desktop.in:19 src/components/indicator.py:21
+#: data/ru.slie.beat.desktop.in:20 src/components/indicator.py:21
 msgid "Pause"
 msgstr "Пауза"
 
-#: data/ru.slie.beat.desktop.in:23
+#: data/ru.slie.beat.desktop.in:24
 msgid "Stop"
 msgstr "Стоп"
 
-#: data/ru.slie.beat.desktop.in:27 src/components/indicator.py:25
+#: data/ru.slie.beat.desktop.in:28 src/components/indicator.py:25
 msgid "Next"
 msgstr "Следующий"
 
-#: data/ru.slie.beat.desktop.in:31 src/components/indicator.py:26
+#: data/ru.slie.beat.desktop.in:32 src/components/indicator.py:26
 msgid "Prev"
 msgstr "Предыдущий"
-
-#: data/ru.slie.beat.appdata.xml.in:6
-msgid "Beat"
-msgstr "Beat"
 
 #: data/ru.slie.beat.appdata.xml.in:7
 msgid "Lightweight audio player"
@@ -59,23 +60,19 @@ msgstr "Легковесный аудио плеер"
 msgid "Simple audio player for gnome"
 msgstr "Простой аудиоплеер для gnome"
 
-#: data/ui/header.ui:9
-msgid "beat"
-msgstr ""
-
 #: data/ui/progress.ui:21 data/ui/progress.ui:53
 msgid "label"
 msgstr ""
 
-#: src/application.py:45
+#: src/application.py:47
 msgid "Append to current playlist instead of create new"
 msgstr "Добавить в текущий плейлист, а не создавать новый"
 
-#: src/application.py:50
+#: src/application.py:52
 msgid "available actions: play, pause, stop, next, prev"
 msgstr "доступные значения: play, pause, stop, next, prev"
 
-#: src/application.py:83 src/application.py:114
+#: src/application.py:86 src/application.py:120
 msgid "new playlist"
 msgstr "новый плейлист"
 
@@ -95,15 +92,15 @@ msgstr "Добавить в очередь"
 msgid "Remove from queue"
 msgstr "Удалить из очереди"
 
-#: src/utils/track_info.py:20
+#: src/utils/track_info.py:25
 msgid "unknown album"
 msgstr "неизвестный альбом"
 
-#: src/utils/track_info.py:27
+#: src/utils/track_info.py:32
 msgid "unknown artist"
 msgstr "неизвестный артист"
 
-#: src/utils/track_info.py:34
+#: src/utils/track_info.py:39
 msgid "unknown"
 msgstr "неизвестно"
 
