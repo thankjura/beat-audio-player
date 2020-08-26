@@ -39,9 +39,9 @@ class MediaKeys(GObject.GObject):
 
         self.__media_keys_proxy.connect("g-signal", self.__handle_media_keys)
 
-        ctrlr = Gtk.EventControllerKey().new(self.__window)
-        ctrlr.props.propagation_phase = Gtk.PropagationPhase.CAPTURE
-        ctrlr.connect("focus-in", self.__grab_media_player_keys)
+        self.__ctrlr = Gtk.EventControllerKey().new(self.__window)
+        self.__ctrlr.props.propagation_phase = Gtk.PropagationPhase.CAPTURE
+        self.__ctrlr.connect("focus-in", self.__grab_media_player_keys)
 
     def __grab_media_player_keys(self, controllerkey=None):
         def proxy_call_finished(proxy, result, data=None):
