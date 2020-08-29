@@ -1,4 +1,6 @@
 import io
+import threading
+
 
 from gi.repository import Gtk, GdkPixbuf, GLib
 
@@ -29,6 +31,16 @@ class StatusBar(Gtk.Box):
         self.pack_end(self.__spectrum, True, True, 0)
         self.show_all()
 
+    def __update_cover(self):
+        image_path = ArtInfo(self.__track_path).get_image_path()
+        if not image_path:
+            self.__cover_image.props.pixbuf = self.__generic_cover
+            return
+
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(image_path, 32, 32, True)
+
+        self.__cover_image.props.pixbuf = pixbuf
+
     def __on_player_state(self, player, state):
         if player.props.state != Playback.PLAYING:
             return
@@ -38,13 +50,8 @@ class StatusBar(Gtk.Box):
             return
 
         self.__track_path = track_path
+        thread = threading.Thread(target=self.__update_cover)
+        thread.daemon = True
+        thread.start()
 
-        image_path = ArtInfo(track_path).get_image_path()
-        if not image_path:
-            self.__cover_image.props.pixbuf = self.__generic_cover
-            return
-
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(image_path, 32, 32, True)
-
-        self.__cover_image.props.pixbuf = pixbuf
             
