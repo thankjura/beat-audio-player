@@ -1,3 +1,5 @@
+from random import choice
+
 from gettext import gettext as _
 from gi.repository import Gtk
 
@@ -38,6 +40,7 @@ class PlayListStore(Gtk.ListStore):
         super().__init__(*[col["type"] for col in PLAYLIST_COLS])
         self.__active_ref = None
         self.__uuid = uuid
+        self.__latest_refs = []
 
     def __get_iter_for_ref(self, ref):
         if not ref:
@@ -53,6 +56,8 @@ class PlayListStore(Gtk.ListStore):
     def set_active_ref(self, ref):
         self.set_state_for_active_ref(None)
         self.__active_ref = ref
+        self.__latest_refs = self.__latest_refs[-4:]
+        self.__latest_refs.append(ref)
 
     def remove_refs(self, refs):
         for ref in refs:
@@ -60,14 +65,26 @@ class PlayListStore(Gtk.ListStore):
             if tree_iter:
                 self.remove(tree_iter)
 
-    def get_next_ref(self, ref):
-        tree_iter = self.__get_iter_for_ref(ref)
-        if not tree_iter:
-            return None
+    def get_next_ref(self, ref, shuffle=False):
+        if shuffle:
+            exclude_idx = []
+            items = len(self)
+            if items > 5:
+                for i in self.__latest_refs:
+                    if ref.valid():
+                        exclude_idx.append(ref.get_path().get_indices()[0] )
 
-        next_iter = self.iter_next(tree_iter)
-        if not next_iter:
-            return None
+            idx = choice([i for i in range(items) if i not in exclude_idx])
+            next_iter = self.get_iter(Gtk.TreePath.new_from_indices([idx]))
+
+        else:
+            tree_iter = self.__get_iter_for_ref(ref)
+            if not tree_iter:
+                return None
+
+            next_iter = self.iter_next(tree_iter)
+            if not next_iter:
+                return None
 
         return Gtk.TreeRowReference.new(self, self.get_path(next_iter))
 
@@ -143,12 +160,11 @@ class PlayListStore(Gtk.ListStore):
                 self.set_active_ref(ref)
                 return ref
 
-    def get_next_and_select(self):
-        if self.__active_ref:
-            next_ref = self.get_next_ref(self.__active_ref)
-            if next_ref:
-                self.set_active_ref(next_ref)
-                return next_ref
+    def get_next_and_select(self, shuffle=False):
+        next_ref = self.get_next_ref(self.__active_ref, shuffle=shuffle)
+        if next_ref:
+            self.set_active_ref(next_ref)
+            return next_ref
 
     def get_prev_and_select(self):
         if self.__active_ref:

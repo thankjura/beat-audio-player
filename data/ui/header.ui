@@ -18,100 +18,10 @@
           <object class="GtkImage">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="icon_name">folder-open-symbolic.symbolic</property>
+            <property name="icon_name">folder-open-symbolic</property>
           </object>
         </child>
       </object>
-    </child>
-    <child>
-      <object class="GtkButton" id="_button_add_files">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="receives_default">True</property>
-        <signal name="clicked" handler="_on_add_files" swapped="no"/>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="icon_name">value-increase-symbolic.symbolic</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkButton" id="_button_stop">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="receives_default">True</property>
-        <signal name="clicked" handler="_on_stop" swapped="no"/>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="icon_name">media-playback-stop-symbolic.symbolic</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkButton" id="_button_play">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="receives_default">True</property>
-        <signal name="clicked" handler="_on_play" swapped="no"/>
-        <child>
-          <object class="GtkImage" id="_button_play_img">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="icon_name">media-playback-start-symbolic.symbolic</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkButton" id="_button_prev">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="receives_default">True</property>
-        <signal name="clicked" handler="_on_prev" swapped="no"/>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="icon_name">media-skip-backward-symbolic.symbolic</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkButton" id="_button_next">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="receives_default">True</property>
-        <signal name="clicked" handler="_on_next" swapped="no"/>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="icon_name">media-skip-forward-symbolic.symbolic</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkVolumeButton" id="_button_volume">
@@ -148,7 +58,133 @@ audio-volume-medium-symbolic</property>
       </object>
       <packing>
         <property name="pack_type">end</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="_button_shuffle">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="icon_name">media-playlist-shuffle-symbolic</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack_type">end</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="_button_repeat">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <child>
+          <object class="GtkImage" id="_button_repeat_img">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="icon_name">media-playlist-repeat-symbolic</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack_type">end</property>
+        <property name="position">3</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="_button_add_files">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <signal name="clicked" handler="_on_add_files" swapped="no"/>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="icon_name">value-increase-symbolic</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">4</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="_button_stop">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <signal name="clicked" handler="_on_stop" swapped="no"/>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="icon_name">media-playback-stop-symbolic</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">5</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="_button_play">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <signal name="clicked" handler="_on_play" swapped="no"/>
+        <child>
+          <object class="GtkImage" id="_button_play_img">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="icon_name">media-playback-start-symbolic</property>
+          </object>
+        </child>
+      </object>
+      <packing>
         <property name="position">6</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="_button_prev">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <signal name="clicked" handler="_on_prev" swapped="no"/>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="icon_name">media-skip-backward-symbolic</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">7</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="_button_next">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <signal name="clicked" handler="_on_next" swapped="no"/>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="icon_name">media-skip-forward-symbolic</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">8</property>
       </packing>
     </child>
   </template>

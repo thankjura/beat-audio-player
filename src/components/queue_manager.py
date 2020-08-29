@@ -28,9 +28,31 @@ class QueueManager(GObject.GObject):
         self.__player.connect("notify::state", self.__on_player_state)
         self.__player.connect("eos", self.__on_player_eos)
         self.__active_ref = None
+        self.__repeat_mode = None
+        self.__shuffle = False
+
+    @property
+    def repeat_mode(self):
+        return self.__repeat_mode
+
+    @repeat_mode.setter
+    def repeat_mode(self, mode):
+        self.__repeat_mode = mode
+
+    @property
+    def shuffle(self):
+        return self.__shuffle
+
+    @shuffle.setter
+    def shuffle(self, shuffle):
+        self.__shuffle = shuffle
 
     def __on_player_eos(self, player):
-        self.play_next()
+        if self.__repeat_mode == "song":
+            self.stop()
+            self.play()
+        else:
+            self.play_next()
 
     def __on_player_state(self, player, _state):
         player_state = player.props.state
@@ -98,9 +120,16 @@ class QueueManager(GObject.GObject):
 
         if self.__active_ref and self.__active_ref.valid():
             model = self.__active_ref.get_model()
-            ref = model.get_next_and_select()
+            ref = model.get_next_and_select(shuffle=self.__shuffle)
             if ref:
                 self.play_ref(ref)
+                return
+            elif self.__repeat_mode == "playlist":
+                ref = model.get_first_and_select()
+                if ref:
+                    self.play_ref(ref)
+                    return
+        self.stop()
 
     def play_prev(self):
         if self.__player.props.state != Playback.PLAYING:
