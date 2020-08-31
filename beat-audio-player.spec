@@ -1,21 +1,19 @@
 %global sysname beat
 
-%define build_timestamp %{lua: print(os.date("%Y%m%d"))}
-
 # Git submodules
 # * tinytag
 %global commit1 2c03b0b4b15056feb7c8051fa39728bcd71be30d
 %global shortcommit1 %(c=%{commit1}; echo ${c:0:7})
 
-Name: beat-audio-player
-Version: 0
-Release: 0.10.%{build_timestamp}%{?dist}
+Name: {{{ git_dir_name }}}
+Version: {{{ git_dir_version }}}
+Release: 1%{?dist}
 Summary: simple audioplayer for gnome
 BuildArch: noarch
 
 License: GPLv3+
 URL: https://github.com/thankjura/beat-audio-player
-Source0: %{url}/archive/master/%{name}-%{build_timestamp}.tar.gz
+Source0: {{{ git_dir_pack }}}
 Source1: https://github.com/devsnd/tinytag/archive/%{commit1}/tinytag-%{shortcommit1}.tar.gz
 
 BuildRequires: desktop-file-utils
@@ -37,8 +35,8 @@ Provides: bundled(tinytag) = 0~git%{shortcommit1}
 
 
 %prep
-%setup -q -n %{name}-master
-%setup -q -D -T -a1 -n %{name}-master
+{{{ git_dir_setup_macro }}}
+{{{ git_dir_setup_macro }}} -a1
 
 mv tinytag-%{commit1}/* third_party/tinytag
 
