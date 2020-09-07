@@ -1,0 +1,35 @@
+app-id: ru.slie.beat
+runtime: org.gnome.Platform
+runtime-version: '3.36'
+sdk: org.gnome.Sdk
+command: beat
+finish-args:
+  - --device=dri
+  - --filesystem=xdg-download
+  - --filesystem=xdg-music
+  - --own-name=org.mpris.MediaPlayer2.beat
+  - --share=ipc
+  - --share=network
+  - --socket=fallback-x11
+  - --socket=pulseaudio
+  - --socket=wayland
+  - --talk-name=org.freedesktop.Notifications
+cleanup:
+  - '*.a'
+  - '*.la'
+  - /include
+  - /lib/pkgconfig
+  - /man
+  - /share/doc
+  - /share/gtk-doc
+  - /share/man
+  - /share/pkgconfig
+modules:
+  - shared-modules/libappindicator/libappindicator-gtk3-introspection-12.10.json
+
+  - name: beat
+    builddir: true
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: .
