@@ -29,8 +29,9 @@ class Player(GObject.GObject):
         audioconvert = Gst.ElementFactory.make('audioconvert', 'audioconvert')
 
         spectrum = Gst.ElementFactory.make("spectrum", "spectrum")
-        spectrum.set_property("bands", 64)
-        spectrum.set_property("threshold", -60)
+        spectrum.set_property("bands", 96)
+        spectrum.set_property("threshold", -80)
+        spectrum.set_property("interval", 10000000)
         spectrum.set_property("post-messages", True)
         spectrum.set_property('message-magnitude', True)
 
