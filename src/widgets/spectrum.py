@@ -27,41 +27,80 @@ def _interpolate_colors(start_color, target_color, steps):
 
     return out
 
+
+class SpectrumCol:
+    #BRICK_BORDER_SIZE = 1
+    #BRICK_BORDER_COLOR = (1.0, 1.0, 1.0, 1.0)
+
+    COLOR_LOWER = (0.0, 0.8, 0.0, 1.0)
+    COLOR_UPPER = (0.8, 0.0, 0.0, 1.0)
+    COLOR_EXTRM = (0.1, 0.0, 0.0, 1.0)
+
+    COUNT = 8
+    GAP = 1
+
+
+    COLOURS = _interpolate_colors(COLOR_LOWER,
+                                  COLOR_UPPER,
+                                  COUNT)
+
+    def __init__(self, magnitute, spect_min, spect_max):
+        self.__min = spect_min
+        self.__max = spect_max
+        self.__cur = magnitute
+
+    def update(self, magnitute, spect_min, spect_max):
+        self.__min = spect_min
+        self.__max = spect_max
+        self.__cur = magnitute
+
+    def draw(self, col_width, col_height, cr, x_pos):
+        brick_h = (col_height - (self.GAP * (self.COUNT - 1))) / self.COUNT
+        if self.__max == self.__min:
+            return
+
+        upper = (self.__cur - self.__min)/(self.__max - self.__min) * self.COUNT
+
+        for i in range(self.COUNT):
+            if i >= upper:
+                break
+            y_pos = col_height - i*(brick_h + self.GAP) - brick_h
+            cr.rectangle(x_pos, y_pos, col_width, brick_h)
+            cr.set_source_rgba(*self.COLOURS[i])
+            cr.fill()
+
+
 class Spectrum(Gtk.DrawingArea):
-    LINE_SIZE = 1
-    LINE_COLOR = (1.0, 0.0, 0.0, 1.0)
-    LINE_GHOST_SIZE = 1
-    LINE_GHOST_COLOR_S = (0.8, 0.0, 0.0, 0.8)
-    LINE_GHOST_COLOR_E = (0.8, 0.8, 0.2, 0.1)
-    LINE_GHOST_NUM = 5
-
-    LINE_GHOST_COLOURS = _interpolate_colors(LINE_GHOST_COLOR_E,
-                                             LINE_GHOST_COLOR_S,
-                                             LINE_GHOST_NUM)
-
     def __init__(self, app):
         super().__init__()
         self.__app = app
         self.__player = self.__app.props.queue.props.player
         self.__surface = None
+        self.__cols_gap = 2
         self.__height_scale = 1.0
-        self.__spect_data = []
+        self.__spect_cols = []
         bus = self.__player.playbin.get_bus()
         bus.connect('message', self.__on_message_handler)
         self.__player.connect('notify::state', self.__on_player_state)
         self.__player.connect('eos', self.__on_player_eos)
         self.connect("draw", self.__draw_spectrum)
+        # TODO: make change spectrum vis
+        #self.connect("button_press_event", self.__on_key_press)
+        #self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
 
         # props
         self.props.hexpand = True
 
+    #def __on_key_press(self, _widget, _event):
+    #    print("clicked")
+
     def __on_player_eos(self, player):
-        self.__spect_data = []
+        self.__spect_cols = []
         self.queue_draw()
 
     def __on_player_state(self, player, state):
         if player.props.state != Playback.PLAYING:
-            self.__spect_data = []
+            self.__spect_cols = []
             self.queue_draw()
 
     def __on_message_handler(self, bus, message):
@@ -77,24 +116,31 @@ class Spectrum(Gtk.DrawingArea):
                 waittime = s.get_value("stream-time") + s.get_value("duration")
 
             if waittime:
-                fullstr = s.to_string()
-                magstr = fullstr[fullstr.find('{') + 1: fullstr.rfind('}') - 1]
-                magnitude_list = [float(x) for x in magstr.split(',')]
+                magnitude_list = s.get_value("magnitude")[:]
                 spect = [i * self.__height_scale for i in magnitude_list]
                 GLib.idle_add(self.__delayed_idle_spectrum_update, spect)
 
         return True
 
     def __delayed_idle_spectrum_update(self, spect):
-        if len(self.__spect_data) > self.LINE_GHOST_NUM:
-            self.__spect_data = self.__spect_data[-self.LINE_GHOST_NUM:]
+        spect_max = max(spect)
+        spect_min = min(spect)
 
-        self.__spect_data.append(spect)
+        if len(self.__spect_cols) != len(spect):
+            self.__spect_cols = []
+            for s in spect:
+                col = SpectrumCol(s, spect_min, spect_max)
+                self.__spect_cols.append(col)
+        else:
+            for i, s in enumerate(spect):
+                col = self.__spect_cols[i]
+                col.update(s, spect_min, spect_max)
+
         self.queue_draw()
         return False
 
     def __draw_spectrum(self, area, cr):
-        if not self.__spect_data:
+        if not self.__spect_cols:
             cr.push_group()
             cr.pop_group_to_source()
             cr.paint()
@@ -104,36 +150,17 @@ class Spectrum(Gtk.DrawingArea):
         h = self.get_allocated_height()
 
         cr.push_group()
-        # cr.set_line_join(cairo.LineJoin.ROUND)
-        # cr.set_line_cap(cairo.LineCap.ROUND)
 
-        length = len(self.__spect_data)
-        for i, data in enumerate(self.__spect_data):
-            if i == length - 1:
-                line_size = self.LINE_SIZE
-                cr.set_line_width(line_size)
-                cr.set_source_rgba(*self.LINE_COLOR)
-            else:
-                line_size = self.LINE_GHOST_SIZE
-                cr.set_line_width(line_size)
-                cr.set_source_rgba(*self.LINE_GHOST_COLOURS[i-1])
+        cols_count = len(self.__spect_cols)
 
-            min_m = min(data)
-            max_m = max(data)
-            if min_m == max_m:
-                continue
+        col_width = (w - (self.__cols_gap * (cols_count - 1))) / cols_count
 
-            b_width = w / (len(data) + 1)
+        x_pos = 0
 
-            cr.move_to(w, h)
-            next_w = w
-            for b in data:
-                next_h = h - ((b - min_m)/(max_m - min_m) * h) + line_size
-                next_w -= b_width
-                cr.line_to(next_w, next_h)
-
-            cr.line_to(0, h + line_size)
-            cr.stroke()
+        for i, col in enumerate(self.__spect_cols):
+            if i != 0:
+                x_pos += self.__cols_gap + col_width
+            col.draw(col_width, h, cr, x_pos)
 
         cr.pop_group_to_source()
         cr.paint()
