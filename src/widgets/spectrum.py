@@ -116,7 +116,9 @@ class Spectrum(Gtk.DrawingArea):
                 waittime = s.get_value("stream-time") + s.get_value("duration")
 
             if waittime:
-                magnitude_list = s.get_value("magnitude")[:]
+                fullstr = s.to_string()
+                magstr = fullstr[fullstr.find('{') + 1: fullstr.rfind('}') - 1]
+                magnitude_list = [float(x) for x in magstr.split(',')]
                 spect = [i * self.__height_scale for i in magnitude_list]
                 GLib.idle_add(self.__delayed_idle_spectrum_update, spect)
 
