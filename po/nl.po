@@ -1,0 +1,124 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-25 02:06+0300\n"
+"PO-Revision-Date: 2021-02-18 18:25+0100\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
+"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: nl\n"
+
+#: data/ru.slie.beat.desktop.in:3 data/ru.slie.beat.appdata.xml.in:6
+#: data/ui/header.ui:9
+msgid "Beat"
+msgstr "Beat"
+
+#: data/ru.slie.beat.desktop.in:4
+msgid "Audio Player"
+msgstr "Audiospeler"
+
+#: data/ru.slie.beat.desktop.in:16 src/components/indicator.py:20
+msgid "Play"
+msgstr "Afspelen"
+
+#: data/ru.slie.beat.desktop.in:20 src/components/indicator.py:21
+msgid "Pause"
+msgstr "Pauzeren"
+
+#: data/ru.slie.beat.desktop.in:24
+msgid "Stop"
+msgstr "Stoppen"
+
+#: data/ru.slie.beat.desktop.in:28 src/components/indicator.py:25
+msgid "Next"
+msgstr "Volgende"
+
+#: data/ru.slie.beat.desktop.in:32 src/components/indicator.py:26
+msgid "Prev"
+msgstr "Vorige"
+
+#: data/ru.slie.beat.appdata.xml.in:7
+msgid "Lightweight audio player"
+msgstr "Lichtgewicht audiospeler"
+
+#: data/ru.slie.beat.appdata.xml.in:9
+msgid "Simple audio player for gnome"
+msgstr "Een eenvoudige audiospeler voor GNOME"
+
+#: data/ui/progress.ui:21 data/ui/progress.ui:53
+msgid "label"
+msgstr "label"
+
+#: src/application.py:47
+msgid "Append to current playlist instead of create new"
+msgstr "Toevoegen aan huidige afspeellijst"
+
+#: src/application.py:52
+msgid "available actions: play, pause, stop, next, prev"
+msgstr "beschikbare acties: afspelen, pauzeren, stoppen, volgende, vorige"
+
+#: src/application.py:86 src/application.py:120
+msgid "new playlist"
+msgstr "nieuwe afspeellijst"
+
+#: src/window/tab.py:23
+msgid "Rename"
+msgstr "Naam wijzigen"
+
+#: src/window/tab.py:24 src/widgets/playlist.py:60
+msgid "Delete"
+msgstr "Verwijderen"
+
+#: src/widgets/playlist.py:56
+msgid "Add to queue"
+msgstr "Toevoegen aan wachtrij"
+
+#: src/widgets/playlist.py:58
+msgid "Remove from queue"
+msgstr "Verwijderen uit wachtrij"
+
+#: src/utils/track_info.py:25
+msgid "unknown album"
+msgstr "onbekend album"
+
+#: src/utils/track_info.py:32
+msgid "unknown artist"
+msgstr "onbekende artiest"
+
+#: src/utils/track_info.py:39
+msgid "unknown"
+msgstr "onbekend"
+
+#: src/components/indicator.py:27
+msgid "Show"
+msgstr "Tonen"
+
+#: src/components/indicator.py:28
+msgid "Quit"
+msgstr "Afsluiten"
+
+#: src/components/store.py:12
+msgid "Artist"
+msgstr "Artiest"
+
+#: src/components/store.py:13
+msgid "Album"
+msgstr "Album"
+
+#: src/components/store.py:14
+msgid "Title"
+msgstr "Naam"
+
+#: src/components/store.py:15
+msgid "Length"
+msgstr "Duur"
