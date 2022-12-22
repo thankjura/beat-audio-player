@@ -1,3 +1,5 @@
+# ref https://github.com/thankjura/beat-audio-player-rs
+
 # beat-audio-player [WIP]
 
 Simple audioplayer for GNOME.
